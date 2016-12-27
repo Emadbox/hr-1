@@ -23,5 +23,22 @@
                 </xpath>
             </field>
         </record>
+        <record model="ir.actions.server" id="hr_holiday_archive_action">
+            <field name="name">Archive</field>
+            <field name="model_id" ref="hr_holiday_archived.model_hr_holidays"/>
+            <field name="code">
+                self.archive_holiday(cr, uid, context.get('active_ids', []), context=context)
+            </field>
+        </record>
+
+        <record model="ir.values" id="hr_holiday_run_archive_action">
+            <field name="model_id" ref="hr_holiday_archived.model_hr_holidays" />
+            <field name="name">Arvice</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('hr_holiday_archive_action'))" />
+            <field name="key">action</field>
+            <field name="model">hr.holidays</field>
+        </record>
+
     </data>
 </openerp>
