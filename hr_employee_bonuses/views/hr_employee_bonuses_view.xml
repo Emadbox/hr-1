@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="employee_bonus_form">
+            <field name="name">employee_bonus_form</field>
+            <field name="model">hr.employee.bonus</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="employee_id" />
+                            <field name="type" />
+                            <field name="description" />
+                        </group>
+                        <group>
+                            <field name="date" />
+                            <field name="user_id" />
+                            <field name="amount" />
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="employee_bonus_tree">
+            <field name="name">employee_bonus_tree</field>
+            <field name="model">hr.employee.bonus</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="employee_id" />
+                    <field name="description" />
+                    <field name="date" />
+                    <field name="type" />
+                    <field name="amount" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="act_employee_bonuses" model="ir.actions.act_window">
+            <field name="name">Bonuses</field>
+            <field name="res_model">hr.employee.bonus</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Here, you can create new bonuses for your employees.
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem
+                  id="hr_employee_bonuses_menu"
+                  name="Bonuses"
+                  parent="hr.menu_hr_root"
+                  sequence="50"
+                  action="act_employee_bonuses"
+                  groups="base.group_hr_manager"
+                  />
+    </data>
+</openerp>
