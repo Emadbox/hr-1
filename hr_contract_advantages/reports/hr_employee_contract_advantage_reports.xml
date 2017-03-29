@@ -24,7 +24,7 @@
                                     <h3>Employee: <span t-field="o.name" /></h3>
                                 </div>
                                 <div t-foreach="o.contract_ids" t-as="contract" class="row">
-                                    <h3>Contract : <span t-field="contract.name" /> (<span t-field="contract.date_start" /> - <span t-field="contract.date_end" />)</h3>
+                                    <h4>Contract : <span t-field="contract.name" /> (<span t-field="contract.date_start" /> - <span t-field="contract.date_end" />)</h4>
                                     <table class="table table-bordered mb64">
                                         <tr>
                                             <th>Type</th>
@@ -36,6 +36,7 @@
                                             <td><span t-field="advantage.type" /></td>
                                             <td>
                                                 <span t-field="advantage.name" /> (<span t-field="advantage.date_start" /> - <span t-field="advantage.date_end" />)
+                                            </td>
                                             <td>
                                                 <!-- Vehicle -->
                                                 <t t-if="advantage.type=='vehicle'">
