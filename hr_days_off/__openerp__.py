@@ -34,7 +34,7 @@ It's use to improve the holidays requests by taking into account the bank holida
     'init_xml' : [],
     'demo_xml' : [],
     'images': ['images/leave.png','images/periods.png'],
-    'update_xml' : ['day_off.xml','hr_holidays_view.xml','security/ir.model.access.csv','scheduler.xml'],
+    'update_xml' : ['day_off.xml','hr_holidays_view.xml','security/ir.model.access.csv'],
     'test': [],
     'active' : False,
     'installable' : True,
