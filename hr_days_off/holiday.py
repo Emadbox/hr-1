@@ -73,7 +73,13 @@ class hr_holidays(osv.osv):
         i=0
         user = self.pool.get('res.users').browse(cr, uid, uid)
         while from_dt < to_dt:
-            dayoff=self.pool.get('training.holiday.period').search(cr,uid,['&', ('company_id', '=', user.company_id.id), ('date_start','<=',from_dt),('date_stop','>=',from_dt)])
+            dayoff=self.pool.get('training.holiday.period').search(cr,uid,[
+                '&',
+                    '|',
+                    ('company_ids', '=', False),
+                    ('company_ids', '=', user.company_id.id),
+                ('date_start','<=',from_dt),('date_stop','>=',from_dt)
+            ])
             if dayoff:
                 i+=1
             from_dt = from_dt + relativedelta(days=1)

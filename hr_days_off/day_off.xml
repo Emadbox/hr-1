@@ -49,7 +49,7 @@
                     <field name="date_stop"/>
                     <field name="active"/>
                     <field name="categ"/>
-                    <field name="company_id"/>
+                    <field name="company_ids"/>
                 </tree>
             </field>
         </record>
@@ -68,7 +68,7 @@
 		                    <field name="date_stop"/>
 		                    <field name="active"/>
                             <field name="categ"/>
-                            <field name="company_id" required="1"/>
+                            <field name="company_ids"/>
                         </group>
                     </sheet>
                 </form>

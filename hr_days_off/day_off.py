@@ -43,13 +43,12 @@ class holiday_period(osv.osv):
         'date_stop' : fields.date('Date Stop', required=True),
         'active' : fields.boolean('Active'),
         'categ' : fields.many2one('training.holidays.category', 'Category'),
-        'company_id': fields.many2one('res.company', 'Company')
+        'company_ids': fields.many2many('res.company', id1='period_id', id2='company_id', string='Company')
         }
     _defaults = {
         'active' : lambda *a: 1,
         'date_start' : lambda *a: time.strftime(DT_FORMAT),
-        'date_stop' : lambda *a: time.strftime(DT_FORMAT) #,
-        #'company_id': lambda self: self.env['res.company']._company_default_get('training.holiday.period')
+        'date_stop' : lambda *a: time.strftime(DT_FORMAT)
     }
 
     def _check_date_start_stop(self, cr, uid, ids, context=None):
