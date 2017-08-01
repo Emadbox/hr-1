@@ -49,6 +49,7 @@
                     <field name="date_stop"/>
                     <field name="active"/>
                     <field name="categ"/>
+                    <field name="company_id"/>
                 </tree>
             </field>
         </record>
@@ -66,7 +67,8 @@
 		                    <field name="date_start"/>
 		                    <field name="date_stop"/>
 		                    <field name="active"/>
-		                    <field name="categ"/>
+                            <field name="categ"/>
+                            <field name="company_id" required="1"/>
                         </group>
                     </sheet>
                 </form>
@@ -84,7 +86,7 @@
                         <separator orientation="vertical"/>
 	                    <field name="name"/>
 	                    <field name="year_id"/>
-	                    <field name="categ"/>
+                        <field name="categ"/>
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20">
