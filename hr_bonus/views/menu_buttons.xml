@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="action_bonus" model="ir.actions.act_window">
+            <field name="name">Bonus</field>
+            <field name="res_model">hr.bonus</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Bonus"
+            id="menu_bonus"
+            sequence="5" action="action_bonus" />
+
+        <!-- <menuitem name="Bonus"
+            id="menu_bonus" parent="project_service_desk.menu_main_service_desk"
+            sequence="5" action="action_bonus" /> -->
+    </data>
+</openerp>
