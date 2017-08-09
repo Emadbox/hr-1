@@ -10,10 +10,6 @@
 
         <menuitem name="Bonus"
             id="menu_bonus"
-            sequence="5" action="action_bonus" />
-
-        <!-- <menuitem name="Bonus"
-            id="menu_bonus" parent="project_service_desk.menu_main_service_desk"
-            sequence="5" action="action_bonus" /> -->
+            sequence="5" action="action_bonus" web_icon="hr_bonus,static/description/menu.png" />
     </data>
 </openerp>
