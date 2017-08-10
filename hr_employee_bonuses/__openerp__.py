@@ -10,6 +10,11 @@
     'website': "http://www.abakusitsolutions.eu",
     'category': 'Human Resources',
     'description': """
+HR Bonuses on Employee
+
+This modules manages Bonuses on employees manually.
+A new Menuitem is added and you can create Bonuses (date, desc, amount, type) for employees.
+
 This module has been developed by Valentin Thirion @ AbAKUS it-solutions""",
     'data': [
         'views/hr_employee_view.xml',
