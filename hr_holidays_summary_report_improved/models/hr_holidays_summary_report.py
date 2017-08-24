@@ -19,7 +19,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
 
     def _get_header_info(self, start_date_str, holiday_type):
 
-        self.start_date = datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT)
+        self.start_date = datetime.strptime(start_date_str, DEFAULT_SERVER_DATE_FORMAT)
         last_day = calendar.monthrange(int(self.start_date.strftime('%Y')), int(self.start_date.strftime('%m')))[1]
         end_date_str = self.start_date.strftime('%Y-%m') + '-' + str(last_day)
         self.end_date = datetime.strptime(end_date_str, DEFAULT_SERVER_DATE_FORMAT)
