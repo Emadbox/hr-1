@@ -17,26 +17,51 @@ _logger = logging.getLogger(__name__)
 class HrHolidaysSummaryReport(models.AbstractModel):
     _inherit = 'report.hr_holidays.report_holidayssummary'
 
-    def _get_header_info(self, start_date, holiday_type):
+    def _get_header_info(self, start_date_str, holiday_type):
 
-        values = super(HrHolidaysSummaryReport, self)._get_header_info(start_date, holiday_type)
+        self.start_date = datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT)
+        last_day = calendar.monthrange(int(self.start_date.strftime('%Y')), int(self.start_date.strftime('%m')))[1]
+        end_date_str = self.start_date.strftime('%Y-%m') + '-' + str(last_day)
+        self.end_date = datetime.strptime(end_date_str, DEFAULT_SERVER_DATE_FORMAT)
 
-        start_dt = datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT)
+        return {
+            'start_date': self.start_date.strftime('%Y-%m-%d'),
+            'end_date': self.end_date.strftime('%Y-%m-%d'),
+            'holiday_type': 'Confirmed and Approved' if holiday_type == 'both' else holiday_type
+        }
 
-        last_day = calendar.monthrange(int(start_dt.strftime('%Y')), int(start_dt.strftime('%m')))[1]
+    def _get_day(self, start_date):
+        res = []
+        start_date = self.start_date
+        for x in range(0, (self.end_date - self.start_date).days + 1):
+            color = '#ababab' if start_date.strftime('%a') == 'Sat' or start_date.strftime('%a') == 'Sun' else ''
+            res.append({'day_str': start_date.strftime('%a'), 'day': start_date.day , 'color': color})
+            start_date = start_date + relativedelta(days=1)
+        return res
 
-        values['end_date'] = start_dt.strftime('%Y-%m') + '-' + str(last_day)
-
-        return values
+    def _get_months(self, start_date):
+        # it works for geting month name between two dates.
+        res = []
+        start_date = self.start_date
+        end_date = self.end_date
+        while start_date <= end_date:
+            last_date = start_date + relativedelta(day=1, months=+1, days=-1)
+            if last_date > end_date:
+                last_date = end_date
+            month_days = (last_date - start_date).days + 1
+            res.append({'month_name': start_date.strftime('%B'), 'days': month_days})
+            start_date += relativedelta(day=1, months=+1)
+        return res
 
     def _get_leaves_summary(self, cr, uid, ids, start_date, empid, holiday_type, context=None):
         res = []
         self.status_sum_emp = {}
         count = 0
-        start_date = datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT)
+        start_date = self.start_date
         start_date = osv.fields.datetime.context_timestamp(cr, uid, start_date, context=context).date()
-        end_date = start_date + relativedelta(days=59)
-        for index in range(0, 60):
+        end_date = self.end_date
+        end_date = osv.fields.datetime.context_timestamp(cr, uid, end_date, context=context).date()
+        for index in range(0, (self.end_date - self.start_date).days + 1):
             current = start_date + timedelta(index)
             res.append({'day': current.day, 'color': ''})
             if current.strftime('%a') == 'Sat' or current.strftime('%a') == 'Sun':
