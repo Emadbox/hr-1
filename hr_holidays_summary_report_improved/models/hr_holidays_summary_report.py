@@ -28,7 +28,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
 
         return values
 
-    def _get_leaves_summary_old(self, cr, uid, ids, start_date, empid, holiday_type, context=None):
+    def _get_leaves_summary(self, cr, uid, ids, start_date, empid, holiday_type, context=None):
         res = []
         self.status_sum_emp = {}
         count = 0
