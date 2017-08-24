@@ -25,7 +25,7 @@ class HrHolidaysSummaryDept(models.Model):
         ('11', 'November'),
         ('12', 'December')
     ], string="Month", required=True, default=lambda *a: time.strftime('%m'))
-    year = fields.Integer(string="Year", required=True, lambda *a: int(time.strftime('%Y')))
+    year = fields.Integer(string="Year", required=True, default=lambda *a: int(time.strftime('%Y')))
 
     @api.one
     @api.onchange('month', 'year')
