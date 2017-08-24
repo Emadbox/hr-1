@@ -31,6 +31,6 @@ class HrHolidaysSummaryDept(models.Model):
     @api.onchange('month', 'year')
     def onchange_date(self):
         if not self.month or not self.year or self.year < 0 or self.year > 9999:
-            self.date = False
+            self.date_from = False
         else:
-            self.date = str(self.year).zfill(4) + '-' + self.month + '-01'
+            self.date_from = str(self.year).zfill(4) + '-' + self.month + '-01'
