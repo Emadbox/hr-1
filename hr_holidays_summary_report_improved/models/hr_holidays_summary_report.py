@@ -2,6 +2,7 @@
 
 from openerp import models, fields, api, exceptions, _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp import osv
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -33,7 +34,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         self.status_sum_emp = {}
         count = 0
         start_date = datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT)
-        start_date = fields.datetime.context_timestamp(cr, uid, start_date, context=context).date()
+        start_date = osv.fields.datetime.context_timestamp(cr, uid, start_date, context=context).date()
         end_date = start_date + relativedelta(days=59)
         for index in range(0, 60):
             current = start_date + timedelta(index)
@@ -48,9 +49,9 @@ class HrHolidaysSummaryReport(models.AbstractModel):
             # Convert date to user timezone, otherwise the report will not be consistent with the
             # value displayed in the interface.
             date_from = datetime.strptime(holiday.date_from, DEFAULT_SERVER_DATETIME_FORMAT)
-            date_from = fields.datetime.context_timestamp(cr, uid, date_from, context=context).date()
+            date_from = osv.fields.datetime.context_timestamp(cr, uid, date_from, context=context).date()
             date_to = datetime.strptime(holiday.date_to, DEFAULT_SERVER_DATETIME_FORMAT)
-            date_to = fields.datetime.context_timestamp(cr, uid, date_to, context=context).date()
+            date_to = osv.fields.datetime.context_timestamp(cr, uid, date_to, context=context).date()
             for index in range(0, ((date_to - date_from).days + 1)):
                 if date_from >= start_date and date_from <= end_date:
                     res[(date_from-start_date).days]['color'] = holiday.holiday_status_id.color_name
