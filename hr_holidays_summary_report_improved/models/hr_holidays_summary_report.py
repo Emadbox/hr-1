@@ -47,11 +47,11 @@ class HrHolidaysSummaryReport(models.AbstractModel):
             'holiday_type': 'Confirmed and Approved' if holiday_type == 'both' else holiday_type
         }
 
-    def _get_day(self):
+    def _get_day(self, is_category):
         res = []
         start_date = self.start_date
         for x in range(0, (self.end_date - self.start_date).days + 1):
-            color = '#ababab' if start_date.strftime('%a') == 'Sat' or start_date.strftime('%a') == 'Sun' else ''
+            color = '#ababab' if is_category or start_date.strftime('%a') == 'Sat' or start_date.strftime('%a') == 'Sun' else ''
             res.append({'day_str': start_date.strftime('%a'), 'day': start_date.day , 'color': color})
             start_date = start_date + relativedelta(days=1)
         return res
@@ -128,7 +128,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                             self.status_sum.setdefault(status, 0)
                             self.status_sum[status] += self.status_sum_emp[status]
                 if not hide_empty or not dept_empty:
-                    res.append({'dept' : department.name, 'data': res_data, 'color': self._get_day()})
+                    res.append({'dept' : department.name, 'data': res_data, 'color': self._get_day(True)})
         elif 'emp' in data:
             employees = emp_obj.browse(cr, uid, data['emp'], context=context)
             res.append({'data':[]})
@@ -162,7 +162,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
             'doc_model': holidays_report.model,
             'docs': selected_records,
             'get_header_info': self._get_header_info(data['form']['date_from'], data['form']['holiday_type']),
-            'get_day': self._get_day(),
+            'get_day': self._get_day(False),
             'get_months': self._get_months(),
             'get_data_from_report': self._get_data_from_report(cr, uid, ids, data['form'], data['form']['hide_empty_categories'], data['form']['hide_no_leaves_emp'], context=context),
             'get_holidays_status': self._get_holidays_status(cr, uid, ids, data['form']['hide_empty_status'], context=context),
