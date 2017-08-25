@@ -33,9 +33,10 @@
                                     &lt;td class="text-center oe_leftfit oe_rightfit" style="background-color:<t t-esc="day['color']"/>!important; font-size: 10px" &gt; <t t-esc="day['day']"/>&lt;/td&gt;
                                 </t>
                                 <td class="text-center" t-foreach="get_holidays_status" t-as="status">
-                                    <t t-esc="status['name'][:4]"/>
+                                    <t t-set="status_name" value="status['name'] if len(status['name']) <= 6 else status['name'][:5] + '.'" />
+                                    <t t-esc="status_name"/>
                                 </td>
-                                <td class="text-center">Total</td>
+                                <td class="text-center"><strong>Total</strong></td>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,7 +48,7 @@
                                     <t t-foreach="obj['color']" t-as="c">
                                         &lt;td style=background-color:<t t-esc="c['color']"/> !important/&gt;
                                     </t>
-                                    <td style="background-color:#d5d5d5;" />
+                                    <td style="background-color:#d5d5d5;" t-att-colspan="len(get_holidays_status)+1" />
                                 </tr>
                                 <tr t-foreach="obj['data']" t-as="emp">
                                     <td><t t-esc="emp['emp']"/></td>
