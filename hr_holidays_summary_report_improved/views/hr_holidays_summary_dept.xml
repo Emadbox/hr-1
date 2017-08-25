@@ -19,6 +19,13 @@
                         <group>
                             <field name="year" />
                         </group>
+                        
+                        <group>
+                            <field name="hide_empty_categories" />
+                        </group>
+                        <group>
+                            <field name="hide_empty_status" />
+                        </group>
                     </xpath>
                 </data>
             </field>

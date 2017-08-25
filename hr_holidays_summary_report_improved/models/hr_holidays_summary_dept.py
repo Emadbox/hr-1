@@ -27,6 +27,9 @@ class HrHolidaysSummaryDept(models.Model):
     ], string="Month", required=True, default=lambda *a: time.strftime('%m'))
     year = fields.Integer(string="Year", required=True, default=lambda *a: int(time.strftime('%Y')))
 
+    hide_empty_categories = fields.Boolean(string="Hide Empty Departments", default=True)
+    hide_empty_status = fields.Boolean(string="Hide Empty Leave Types", default=True)
+
     @api.one
     @api.onchange('month', 'year')
     def onchange_date(self):

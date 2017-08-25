@@ -47,7 +47,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
             'holiday_type': 'Confirmed and Approved' if holiday_type == 'both' else holiday_type
         }
 
-    def _get_day(self, start_date):
+    def _get_day(self):
         res = []
         start_date = self.start_date
         for x in range(0, (self.end_date - self.start_date).days + 1):
@@ -56,7 +56,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
             start_date = start_date + relativedelta(days=1)
         return res
 
-    def _get_months(self, start_date):
+    def _get_months(self):
         # it works for geting month name between two dates.
         res = []
         start_date = self.start_date
@@ -104,18 +104,18 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         self.sum = count
         return res
 
-    def _get_data_from_report(self, cr, uid, ids, data, context=None):
+    def _get_data_from_report(self, cr, uid, ids, data, hide_empty, context=None):
         res = []
         self.status_sum = {}
         emp_obj = self.pool['hr.employee']
         department_obj = self.pool['hr.department']
         if 'depts' in data:
             for department in department_obj.browse(cr, uid, data['depts'], context=context):
-                res.append({'dept' : department.name, 'data': [], 'color': self._get_day(data['date_from'])})
+                data = []
                 employee_ids = emp_obj.search(cr, uid, [('department_id', '=', department.id)], context=context)
                 employees = emp_obj.browse(cr, uid, employee_ids, context=context)
                 for emp in employees:
-                    res[len(res)-1]['data'].append({
+                    data.append({
                         'emp': emp.name,
                         'display': self._get_leaves_summary(cr, uid, ids, data['date_from'], emp.id, data['holiday_type'], context=context),
                         'sum': self.sum
@@ -123,6 +123,8 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                     for status in self.status_sum_emp:
                         self.status_sum.setdefault(status, 0)
                         self.status_sum[status] += self.status_sum_emp[status]
+                if not hide_empty or len(employees) > 0:
+                    res.append({'dept' : department.name, 'data': data, 'color': self._get_day()})
         elif 'emp' in data:
             employees = emp_obj.browse(cr, uid, data['emp'], context=context)
             res.append({'data':[]})
@@ -137,8 +139,26 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                     self.status_sum[status] += self.status_sum_emp[status]
         return res
 
-    def _get_holidays_status(self, cr, uid, ids, context=None):
+    def _get_holidays_status(self, cr, uid, ids, hide_empty, context=None):
+        if not hide_empty:
+            return super(HrHolidaysSummaryReport, self)._get_holidays_status(cr, uid, ids, context=context)
         res = []
         for status in self.status_sum:
             res.append({'color': status.color_name, 'name': status.name})
         return res
+
+    def render_html(self, cr, uid, ids, data=None, context=None):
+        report_obj = self.pool['report']
+        holidays_report = report_obj._get_report_from_name(cr, uid, 'hr_holidays.report_holidayssummary')
+        selected_records = self.pool['hr.holidays'].browse(cr, uid, ids, context=context)
+        docargs = {
+            'doc_ids': ids,
+            'doc_model': holidays_report.model,
+            'docs': selected_records,
+            'get_header_info': self._get_header_info(data['form']['date_from'], data['form']['holiday_type']),
+            'get_day': self._get_day(),
+            'get_months': self._get_months(),
+            'get_data_from_report': self._get_data_from_report(cr, uid, ids, data['form'], data['form']['hide_empty_categories'], context=context),
+            'get_holidays_status': self._get_holidays_status(cr, uid, ids, data['form']['hide_empty_status'], context=context),
+        }
+        return report_obj.render(cr, uid, ids, 'hr_holidays.report_holidayssummary', docargs, context=context)
