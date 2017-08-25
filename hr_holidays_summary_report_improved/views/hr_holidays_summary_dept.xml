@@ -12,10 +12,13 @@
                         <attribute name="invisible">1</attribute>
                     </xpath>
 
+                    <xpath expr="//field[@name='holiday_type']" position="replace" />
+
                     <xpath expr="//field[@name='date_from']" position="after">
                         <group>
                             <field name="month" />
                             <field name="year" />
+                            <field name="holiday_type" />
                         </group>
                         <group>
                             <field name="hide_empty_categories" />

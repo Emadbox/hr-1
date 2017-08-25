@@ -76,6 +76,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         self.status_sum_emp = {}
         count = 0
         sum_days = 0
+        sum_days_status = {}
         start_date = self.start_date
         start_date = osv.fields.datetime.context_timestamp(cr, uid, start_date, context=context).date()
         end_date = self.end_date
@@ -105,11 +106,14 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                 date_from += timedelta(1)
             if holiday.number_of_days_temp and holiday.number_of_days_temp > 0:
                 sum_days += holiday.number_of_days_temp
+                sum_days_status.setdefault(holiday.holiday_status_id, 0)
+                sum_days_status[holiday.holiday_status_id] += holiday.number_of_days_temp
             else:
                 raise exceptions.ValidationError(_('No duration has been set for a holiday (') + holiday.employee_id.name + _(' from ') + date_from.strftime(DEFAULT_SERVER_DATE_FORMAT) + _(' to ') + date_to.strftime(DEFAULT_SERVER_DATE_FORMAT) + ')')
                 return False
         self.sum = count
         self.sum_days = sum_days
+        self.sum_days_status = sum_days_status
         return res
 
     def _get_data_from_report(self, cr, uid, ids, data, hide_empty, hide_no_leaves_emp, context=None):
@@ -146,7 +150,8 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                     res[0]['data'].append({
                         'emp': emp.name,
                         'display': display,
-                        'sum': self.sum_days
+                        'sum': self.sum_days,
+                        'sum_status': self.sum_days_status
                     })
                     for status in self.status_sum_emp:
                         self.status_sum.setdefault(status, 0)
@@ -158,7 +163,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
             return super(HrHolidaysSummaryReport, self)._get_holidays_status(cr, uid, ids, context=context)
         res = []
         for status in self.status_sum:
-            res.append({'color': status.color_name, 'name': status.name})
+            res.append({'color': status.color_name, 'name': status.name, 'object': status})
         return res
 
     def render_html(self, cr, uid, ids, data=None, context=None):

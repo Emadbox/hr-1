@@ -26,13 +26,17 @@
                                 <t t-foreach="get_day" t-as="day">
                                     &lt;td class="text-center oe_leftfit oe_rightfit" style="background-color:<t t-esc="day['color']"/>!important; font-size: 8px; min-width: 18px"&gt; <t t-esc="day['day_str']"/>&lt;/td&gt;
                                 </t>
-                                <td/>
+                                <td class="text-center">Sum</td>
                             </tr>
                             <tr>
                                 <t t-foreach="get_day" t-as="day">
                                     &lt;td class="text-center oe_leftfit oe_rightfit" style="background-color:<t t-esc="day['color']"/>!important; font-size: 10px" &gt; <t t-esc="day['day']"/>&lt;/td&gt;
                                 </t>
-                                <td class="text-center">Sum</td>
+                                <td class="text-center">Sums in days</td>
+                                <tr t-foreach="get_holidays_status" t-as="status">
+                                    <td class="text-center"><t t-esc="status['name'][:4]"/></td>
+                                </tr>
+                                <td class="text-center">Total</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -51,7 +55,10 @@
                                     <t t-foreach="emp['display']" t-as="details">
                                         &lt;td style=background-color:<t t-esc="details['color']"/> !important /&gt;
                                     </t>
-                                    <td class="text-center"><strong><t t-esc="emp['sum']"/> days</strong></td>
+                                    <tr t-foreach="get_holidays_status" t-as="status">
+                                        <td class="text-center"><strong><t t-esc="emp['sum_status'].get(status['object'], 0)"/></strong></td>
+                                    </tr>
+                                    <td class="text-center"><strong><t t-esc="emp['sum']"/></strong></td>
                                 </tr>
                             </t>
                         </tbody>
