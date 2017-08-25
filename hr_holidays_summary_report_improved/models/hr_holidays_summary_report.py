@@ -81,11 +81,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         start_date = osv.fields.datetime.context_timestamp(cr, uid, start_date, context=context).date()
         end_date = self.end_date
         end_date = osv.fields.datetime.context_timestamp(cr, uid, end_date, context=context).date()
-        for index in range(0, (self.end_date - self.start_date).days + 1):
-            current = start_date + timedelta(index)
-            res.append({'day': current.day, 'color': ''})
-            if current.strftime('%a') == 'Sat' or current.strftime('%a') == 'Sun':
-                res[index]['color'] = '#ababab'
+        
         # count and get leave summary details.
         holidays_obj = self.pool['hr.holidays']
         holiday_type = ['confirm','validate'] if holiday_type == 'both' else ['confirm'] if holiday_type == 'Confirmed' else ['validate']
@@ -111,6 +107,12 @@ class HrHolidaysSummaryReport(models.AbstractModel):
             else:
                 raise exceptions.ValidationError(_('No duration has been set for a holiday (') + holiday.employee_id.name + _(' from ') + date_from.strftime(DEFAULT_SERVER_DATE_FORMAT) + _(' to ') + date_to.strftime(DEFAULT_SERVER_DATE_FORMAT) + ')')
                 return False
+        for index in range(0, (self.end_date - self.start_date).days + 1):
+            current = start_date + timedelta(index)
+            res.append({'day': current.day, 'color': ''})
+            if current.strftime('%a') == 'Sat' or current.strftime('%a') == 'Sun':
+                res[index]['color'] = '#ababab'
+        
         self.sum = count
         self.sum_days = sum_days
         self.sum_days_status = sum_days_status
