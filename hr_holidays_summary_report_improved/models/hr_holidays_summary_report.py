@@ -75,6 +75,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         res = []
         self.status_sum_emp = {}
         count = 0
+        sum_days = 0
         start_date = self.start_date
         start_date = osv.fields.datetime.context_timestamp(cr, uid, start_date, context=context).date()
         end_date = self.end_date
@@ -102,7 +103,13 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                     self.status_sum_emp[holiday.holiday_status_id] += 1
                     count+=1
                 date_from += timedelta(1)
+            if holiday.number_of_days_temp and number_of_days_temp > 0:
+                sum_days += holiday.number_of_days_temp
+            else:
+                raise exceptions.ValidationError(_('No duration has been set for a holiday (') + holiday.employee_id.name + _(' from ') + date_from.strftime(DEFAULT_SERVER_DATE_FORMAT) + _(' to ') + date_to.strftime(DEFAULT_SERVER_DATE_FORMAT) + ')'))
+                return False
         self.sum = count
+        self.sum_days = sum_days
         return res
 
     def _get_data_from_report(self, cr, uid, ids, data, hide_empty, hide_no_leaves_emp, context=None):
@@ -123,7 +130,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                         res_data.append({
                             'emp': emp.name,
                             'display': display,
-                            'sum': self.sum
+                            'sum': self.sum_days
                         })
                         for status in self.status_sum_emp:
                             self.status_sum.setdefault(status, 0)
@@ -139,7 +146,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                     res[0]['data'].append({
                         'emp': emp.name,
                         'display': display,
-                        'sum': self.sum
+                        'sum': self.sum_days
                     })
                     for status in self.status_sum_emp:
                         self.status_sum.setdefault(status, 0)

@@ -51,7 +51,7 @@
                                     <t t-foreach="emp['display']" t-as="details">
                                         &lt;td style=background-color:<t t-esc="details['color']"/> !important /&gt;
                                     </t>
-                                    <td class="text-center"><strong><t t-esc="emp['sum']"/></strong></td>
+                                    <td class="text-center"><strong><t t-esc="emp['sum']"/> days</strong></td>
                                 </tr>
                             </t>
                         </tbody>
