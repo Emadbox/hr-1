@@ -32,10 +32,12 @@
                                 <t t-foreach="get_day" t-as="day">
                                     &lt;td class="text-center oe_leftfit oe_rightfit" style="background-color:<t t-esc="day['color']"/>!important; font-size: 10px" &gt; <t t-esc="day['day']"/>&lt;/td&gt;
                                 </t>
-                                <td class="text-center" t-foreach="get_holidays_status" t-as="status">
-                                    <t t-set="status_name" t-value="status['name'] if len(status['name']) &lt;= 6 else status['name'][:5] + '.'" />
-                                    <t t-esc="status_name"/>
-                                </td>
+                                <t t-foreach="get_holidays_status" t-as="status">
+                                    &lt;td class="text-center" style="background-color:<t t-esc="status['color']"/>"&gt;
+                                        <t t-set="status_name" t-value="status['name'] if len(status['name']) &lt;= 6 else status['name'][:5] + '.'" />
+                                        <t t-esc="status_name" />
+                                    &lt;/td&gt;
+                                </t>
                                 <td class="text-center"><strong>Total</strong></td>
                             </tr>
                         </thead>
