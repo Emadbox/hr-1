@@ -81,7 +81,11 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         start_date = osv.fields.datetime.context_timestamp(cr, uid, start_date, context=context).date()
         end_date = self.end_date
         end_date = osv.fields.datetime.context_timestamp(cr, uid, end_date, context=context).date()
-        
+        for index in range(0, (self.end_date - self.start_date).days + 1):
+            current = start_date + timedelta(index)
+            res.append({'day': current.day, 'color': ''})
+            if current.strftime('%a') == 'Sat' or current.strftime('%a') == 'Sun':
+                res[index]['color'] = '#ababab'
         # count and get leave summary details.
         holidays_obj = self.pool['hr.holidays']
         holiday_type = ['confirm','validate'] if holiday_type == 'both' else ['confirm'] if holiday_type == 'Confirmed' else ['validate']
@@ -95,7 +99,8 @@ class HrHolidaysSummaryReport(models.AbstractModel):
             date_to = osv.fields.datetime.context_timestamp(cr, uid, date_to, context=context).date()
             for index in range(0, ((date_to - date_from).days + 1)):
                 if date_from >= start_date and date_from <= end_date:
-                    res[(date_from-start_date).days]['color'] = holiday.holiday_status_id.color_name
+                    if res[(date_from-start_date).days]['color'] == '':
+                        res[(date_from-start_date).days]['color'] = holiday.holiday_status_id.color_name
                     self.status_sum_emp.setdefault(holiday.holiday_status_id, 0)
                     self.status_sum_emp[holiday.holiday_status_id] += 1
                     count+=1
@@ -107,12 +112,6 @@ class HrHolidaysSummaryReport(models.AbstractModel):
             else:
                 raise exceptions.ValidationError(_('No duration has been set for a holiday (') + holiday.employee_id.name + _(' from ') + date_from.strftime(DEFAULT_SERVER_DATE_FORMAT) + _(' to ') + date_to.strftime(DEFAULT_SERVER_DATE_FORMAT) + ')')
                 return False
-        for index in range(0, (self.end_date - self.start_date).days + 1):
-            current = start_date + timedelta(index)
-            res.append({'day': current.day, 'color': ''})
-            if current.strftime('%a') == 'Sat' or current.strftime('%a') == 'Sun':
-                res[index]['color'] = '#ababab'
-        
         self.sum = count
         self.sum_days = sum_days
         self.sum_days_status = sum_days_status
