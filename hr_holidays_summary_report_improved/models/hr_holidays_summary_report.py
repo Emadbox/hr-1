@@ -134,7 +134,8 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                         res_data.append({
                             'emp': emp.name,
                             'display': display,
-                            'sum': self.sum_days
+                            'sum': self.sum_days,
+                            'sum_status': self.sum_days_status
                         })
                         for status in self.status_sum_emp:
                             self.status_sum.setdefault(status, 0)
