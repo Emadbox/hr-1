@@ -97,6 +97,13 @@ class HrHolidaysSummaryReport(models.AbstractModel):
             date_from = osv.fields.datetime.context_timestamp(cr, uid, date_from, context=context).date()
             date_to = datetime.strptime(holiday.date_to, DEFAULT_SERVER_DATETIME_FORMAT)
             date_to = osv.fields.datetime.context_timestamp(cr, uid, date_to, context=context).date()
+            if holiday.number_of_days_temp and holiday.number_of_days_temp > 0:
+                sum_days += holiday.number_of_days_temp
+                sum_days_status.setdefault(holiday.holiday_status_id, 0)
+                sum_days_status[holiday.holiday_status_id] += holiday.number_of_days_temp
+            else:
+                raise exceptions.ValidationError(_('No duration has been set for a holiday (') + holiday.employee_id.name + _(' from ') + date_from.strftime(DEFAULT_SERVER_DATE_FORMAT) + _(' to ') + date_to.strftime(DEFAULT_SERVER_DATE_FORMAT) + ')')
+                return False
             for index in range(0, ((date_to - date_from).days + 1)):
                 if date_from >= start_date and date_from <= end_date:
                     if res[(date_from-start_date).days]['color'] == '':
@@ -105,13 +112,6 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                     self.status_sum_emp[holiday.holiday_status_id] += 1
                     count+=1
                 date_from += timedelta(1)
-            if holiday.number_of_days_temp and holiday.number_of_days_temp > 0:
-                sum_days += holiday.number_of_days_temp
-                sum_days_status.setdefault(holiday.holiday_status_id, 0)
-                sum_days_status[holiday.holiday_status_id] += holiday.number_of_days_temp
-            else:
-                raise exceptions.ValidationError(_('No duration has been set for a holiday (') + holiday.employee_id.name + _(' from ') + date_from.strftime(DEFAULT_SERVER_DATE_FORMAT) + _(' to ') + date_to.strftime(DEFAULT_SERVER_DATE_FORMAT) + ')')
-                return False
         self.sum = count
         self.sum_days = sum_days
         self.sum_days_status = sum_days_status
