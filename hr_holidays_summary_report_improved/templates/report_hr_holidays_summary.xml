@@ -38,13 +38,13 @@
                         <tbody>
                             <t t-foreach="get_data_from_report" t-as="obj">
                                 <tr t-if="'dept' in obj">
-                                    <td style="background-color:#ababab">
+                                    <td style="background-color:#d5d5d5">
                                         <strong><t t-esc="obj['dept']"/></strong>
                                     </td>
                                     <t t-foreach="obj['color']" t-as="c">
                                         &lt;td style=background-color:<t t-esc="c['color']"/> !important/&gt;
                                     </t>
-                                    <td/>
+                                    <td style="background-color:#d5d5d5;" />
                                 </tr>
                                 <tr t-foreach="obj['data']" t-as="emp">
                                     <td><t t-esc="emp['emp']"/></td>
