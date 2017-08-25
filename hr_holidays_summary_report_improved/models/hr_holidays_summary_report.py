@@ -70,7 +70,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
             start_date += relativedelta(day=1, months=+1)
         return res
 
-    def _get_leaves_summary(self, cr, uid, ids, start_date, empid, holiday_type, context=None):
+    def _get_leaves_summary(self, cr, uid, ids, empid, holiday_type, context=None):
         res = []
         self.status_sum_emp = {}
         count = 0
@@ -104,7 +104,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         self.sum = count
         return res
 
-    def _get_data_from_report(self, cr, uid, ids, data, hide_empty, context=None):
+    def _get_data_from_report(self, cr, uid, ids, data, hide_empty, hide_no_leaves_emp, context=None):
         res = []
         self.status_sum = {}
         emp_obj = self.pool['hr.employee']
@@ -115,28 +115,32 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                 employee_ids = emp_obj.search(cr, uid, [('department_id', '=', department.id)], context=context)
                 employees = emp_obj.browse(cr, uid, employee_ids, context=context)
                 for emp in employees:
-                    res_data.append({
-                        'emp': emp.name,
-                        'display': self._get_leaves_summary(cr, uid, ids, data['date_from'], emp.id, data['holiday_type'], context=context),
-                        'sum': self.sum
-                    })
-                    for status in self.status_sum_emp:
-                        self.status_sum.setdefault(status, 0)
-                        self.status_sum[status] += self.status_sum_emp[status]
+                    display = self._get_leaves_summary(cr, uid, ids, emp.id, data['holiday_type'], context=context)
+                    if not hide_no_leaves_emp or self.sum > 0:
+                        res_data.append({
+                            'emp': emp.name,
+                            'display': display,
+                            'sum': self.sum
+                        })
+                        for status in self.status_sum_emp:
+                            self.status_sum.setdefault(status, 0)
+                            self.status_sum[status] += self.status_sum_emp[status]
                 if not hide_empty or len(employees) > 0:
                     res.append({'dept' : department.name, 'data': res_data, 'color': self._get_day()})
         elif 'emp' in data:
             employees = emp_obj.browse(cr, uid, data['emp'], context=context)
             res.append({'data':[]})
             for emp in employees:
-                res[0]['data'].append({
-                    'emp': emp.name,
-                    'display': self._get_leaves_summary(cr, uid, ids, data['date_from'], emp.id, data['holiday_type'], context=context),
-                    'sum': self.sum
-                })
-                for status in self.status_sum_emp:
-                    self.status_sum.setdefault(status, 0)
-                    self.status_sum[status] += self.status_sum_emp[status]
+                display = self._get_leaves_summary(cr, uid, ids, emp.id, data['holiday_type'], context=context)
+                if not hide_no_leaves_emp or self.sum > 0:
+                    res[0]['data'].append({
+                        'emp': emp.name,
+                        'display': display,
+                        'sum': self.sum
+                    })
+                    for status in self.status_sum_emp:
+                        self.status_sum.setdefault(status, 0)
+                        self.status_sum[status] += self.status_sum_emp[status]
         return res
 
     def _get_holidays_status(self, cr, uid, ids, hide_empty, context=None):
@@ -158,7 +162,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
             'get_header_info': self._get_header_info(data['form']['date_from'], data['form']['holiday_type']),
             'get_day': self._get_day(),
             'get_months': self._get_months(),
-            'get_data_from_report': self._get_data_from_report(cr, uid, ids, data['form'], data['form']['hide_empty_categories'], context=context),
+            'get_data_from_report': self._get_data_from_report(cr, uid, ids, data['form'], data['form']['hide_empty_categories'], data['form']['hide_no_leaves_emp'], context=context),
             'get_holidays_status': self._get_holidays_status(cr, uid, ids, data['form']['hide_empty_status'], context=context),
         }
         return report_obj.render(cr, uid, ids, 'hr_holidays.report_holidayssummary', docargs, context=context)

@@ -29,6 +29,7 @@ class HrHolidaysSummaryDept(models.Model):
 
     hide_empty_categories = fields.Boolean(string="Hide Empty Departments", default=True)
     hide_empty_status = fields.Boolean(string="Hide Empty Leave Types", default=True)
+    hide_no_leaves_emp = fields.Boolean(string="Hide Employees Without Leaves", default=True)
 
     @api.one
     @api.onchange('month', 'year')
