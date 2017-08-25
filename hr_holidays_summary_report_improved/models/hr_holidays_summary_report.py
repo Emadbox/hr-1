@@ -111,11 +111,11 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         department_obj = self.pool['hr.department']
         if 'depts' in data:
             for department in department_obj.browse(cr, uid, data['depts'], context=context):
-                data = []
+                res_data = []
                 employee_ids = emp_obj.search(cr, uid, [('department_id', '=', department.id)], context=context)
                 employees = emp_obj.browse(cr, uid, employee_ids, context=context)
                 for emp in employees:
-                    data.append({
+                    res_data.append({
                         'emp': emp.name,
                         'display': self._get_leaves_summary(cr, uid, ids, data['date_from'], emp.id, data['holiday_type'], context=context),
                         'sum': self.sum
@@ -124,7 +124,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                         self.status_sum.setdefault(status, 0)
                         self.status_sum[status] += self.status_sum_emp[status]
                 if not hide_empty or len(employees) > 0:
-                    res.append({'dept' : department.name, 'data': data, 'color': self._get_day()})
+                    res.append({'dept' : department.name, 'data': res_data, 'color': self._get_day()})
         elif 'emp' in data:
             employees = emp_obj.browse(cr, uid, data['emp'], context=context)
             res.append({'data':[]})
