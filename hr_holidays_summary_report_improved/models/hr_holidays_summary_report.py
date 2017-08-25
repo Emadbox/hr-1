@@ -106,7 +106,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
             if holiday.number_of_days_temp and number_of_days_temp > 0:
                 sum_days += holiday.number_of_days_temp
             else:
-                raise exceptions.ValidationError(_('No duration has been set for a holiday (') + holiday.employee_id.name + _(' from ') + date_from.strftime(DEFAULT_SERVER_DATE_FORMAT) + _(' to ') + date_to.strftime(DEFAULT_SERVER_DATE_FORMAT) + ')'))
+                raise exceptions.ValidationError(_('No duration has been set for a holiday (') + holiday.employee_id.name + _(' from ') + date_from.strftime(DEFAULT_SERVER_DATE_FORMAT) + _(' to ') + date_to.strftime(DEFAULT_SERVER_DATE_FORMAT) + ')')
                 return False
         self.sum = count
         self.sum_days = sum_days
