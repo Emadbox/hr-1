@@ -51,7 +51,10 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         res = []
         start_date = self.start_date
         for x in range(0, (self.end_date - self.start_date).days + 1):
-            color = '#ababab' if is_category or start_date.strftime('%a') == 'Sat' or start_date.strftime('%a') == 'Sun' else ''
+            if is_category:
+                color = '#d5d5d5'
+            else:
+                color = '#ababab' if start_date.strftime('%a') == 'Sat' or start_date.strftime('%a') == 'Sun' else ''
             res.append({'day_str': start_date.strftime('%a'), 'day': start_date.day , 'color': color})
             start_date = start_date + relativedelta(days=1)
         return res
