@@ -26,5 +26,6 @@
 
     'data': [
         'views/hr_holidays_summary_dept.xml',
+        'templates/report_hr_holidays_summary.xml'
     ],
 }
