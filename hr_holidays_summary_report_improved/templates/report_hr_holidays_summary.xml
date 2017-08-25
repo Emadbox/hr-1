@@ -33,7 +33,7 @@
                                     &lt;td class="text-center oe_leftfit oe_rightfit" style="background-color:<t t-esc="day['color']"/>!important; font-size: 10px" &gt; <t t-esc="day['day']"/>&lt;/td&gt;
                                 </t>
                                 <td class="text-center" t-foreach="get_holidays_status" t-as="status">
-                                    <t t-set="status_name" value="status['name'] if len(status['name']) <= 6 else status['name'][:5] + '.'" />
+                                    <t t-set="status_name" value="status['name'] if len(status['name']) &gt;= 6 else status['name'][:5] + '.'" />
                                     <t t-esc="status_name"/>
                                 </td>
                                 <td class="text-center"><strong>Total</strong></td>
