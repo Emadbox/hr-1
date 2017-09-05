@@ -56,7 +56,7 @@
                                     <tr>
                                         <td rowspan="2"><t t-esc="emp['emp']"/></td>
                                         <t t-foreach="emp['display']" t-as="details">
-                                            &lt;td style=background-color:<t t-esc="details['color']"/> !important /&gt;
+                                            &lt;td style=background-color:<t t-esc="details['color_morning']"/> !important /&gt;
                                         </t>
                                         <td rowspan="2" class="text-center" t-foreach="get_holidays_status" t-as="status">
                                             <strong><t t-esc="emp['sum_status'].get(status['object'], 0)"/></strong>
@@ -65,7 +65,7 @@
                                     </tr>
                                     <tr>
                                         <t t-foreach="emp['display']" t-as="details">
-                                            &lt;td style=background-color:<t t-esc="details['color']"/> !important /&gt;
+                                            &lt;td style=background-color:<t t-esc="details['color_afternoon']"/> !important /&gt;
                                         </t>
                                     </tr>
                                 </t>

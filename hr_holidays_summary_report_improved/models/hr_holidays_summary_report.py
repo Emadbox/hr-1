@@ -83,9 +83,10 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         end_date = osv.fields.datetime.context_timestamp(cr, uid, end_date, context=context).date()
         for index in range(0, (self.end_date - self.start_date).days + 1):
             current = start_date + timedelta(index)
-            res.append({'day': current.day, 'color': ''})
+            res.append({'day': current.day, 'color_morning': '', 'color_afternoon': ''})
             if current.strftime('%a') == 'Sat' or current.strftime('%a') == 'Sun':
-                res[index]['color'] = '#ababab'
+                res[index]['color_morning'] = '#ababab'
+                res[index]['color_afternoon'] = '#ababab'
         # count and get leave summary details.
         holidays_obj = self.pool['hr.holidays']
         holiday_type = ['confirm','validate'] if holiday_type == 'both' else ['confirm'] if holiday_type == 'Confirmed' else ['validate']
@@ -93,10 +94,10 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         for holiday in holidays_obj.browse(cr, uid, holidays_ids, context=context):
             # Convert date to user timezone, otherwise the report will not be consistent with the
             # value displayed in the interface.
-            date_from = datetime.strptime(holiday.date_from, DEFAULT_SERVER_DATETIME_FORMAT)
-            date_from = osv.fields.datetime.context_timestamp(cr, uid, date_from, context=context).date()
-            date_to = datetime.strptime(holiday.date_to, DEFAULT_SERVER_DATETIME_FORMAT)
-            date_to = osv.fields.datetime.context_timestamp(cr, uid, date_to, context=context).date()
+            date_from_real = datetime.strptime(holiday.date_from, DEFAULT_SERVER_DATETIME_FORMAT)
+            date_from = osv.fields.datetime.context_timestamp(cr, uid, date_from_real, context=context).date()
+            date_to_real = datetime.strptime(holiday.date_to, DEFAULT_SERVER_DATETIME_FORMAT)
+            date_to = osv.fields.datetime.context_timestamp(cr, uid, date_to_real, context=context).date()
             if holiday.number_of_days_temp and holiday.number_of_days_temp > 0:
                 sum_days += holiday.number_of_days_temp
                 sum_days_status.setdefault(holiday.holiday_status_id, 0)
@@ -109,8 +110,14 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                 _logger.info('\n\ndate_from:'+str(date_from)+' start_date:'+str(start_date)+' end_date:'+str(end_date)+'\n\n')
 
                 if date_from >= start_date and date_from <= end_date:
-                    if res[(date_from-start_date).days]['color'] == '':
-                        res[(date_from-start_date).days]['color'] = holiday.holiday_status_id.color_name
+                    if res[(date_from-start_date).days]['color_morning'] == '':
+                        if date_from != date_from_real.date() or date_from_real.hour*60+date_from_real.minute <= 13*60:
+                            res[(date_from-start_date).days]['color_morning'] = holiday.holiday_status_id.color_name
+
+                    if res[(date_from-start_date).days]['color_afternoon'] == '':
+                        if date_from != date_to_real.date() or date_from_real.hour*60+date_from_real.minute >= 13*60:
+                            res[(date_from-start_date).days]['color_afternoon'] = holiday.holiday_status_id.color_name
+
                     self.status_sum_emp.setdefault(holiday.holiday_status_id, 0)
                     self.status_sum_emp[holiday.holiday_status_id] += 1
                     count+=1
