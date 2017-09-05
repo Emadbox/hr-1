@@ -105,6 +105,9 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                 raise exceptions.ValidationError(_('No duration has been set for a holiday (') + holiday.employee_id.name + _(' from ') + date_from.strftime(DEFAULT_SERVER_DATE_FORMAT) + _(' to ') + date_to.strftime(DEFAULT_SERVER_DATE_FORMAT) + ')')
                 return False
             for index in range(0, ((date_to - date_from).days + 1)):
+
+                _logger.info('\n\ndate_from:'+str(date_from)+' start_date:'+str(start_date)+' end_date:'+str(end_date)+'\n\n')
+
                 if date_from >= start_date and date_from <= end_date:
                     if res[(date_from-start_date).days]['color'] == '':
                         res[(date_from-start_date).days]['color'] = holiday.holiday_status_id.color_name
@@ -127,11 +130,9 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                 res_data = []
                 employee_ids = emp_obj.search(cr, uid, [('department_id', '=', department.id)], context=context)
                 employees = emp_obj.browse(cr, uid, employee_ids, context=context)
-                dept_empty = True
                 for emp in employees:
                     display = self._get_leaves_summary(cr, uid, ids, emp.id, data['holiday_type'], context=context)
                     if not hide_no_leaves_emp or self.sum > 0:
-                        dept_empty = False
                         res_data.append({
                             'emp': emp.name,
                             'display': display,
@@ -141,7 +142,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                         for status in self.status_sum_emp:
                             self.status_sum.setdefault(status, 0)
                             self.status_sum[status] += self.status_sum_emp[status]
-                if not hide_empty or not dept_empty:
+                if not hide_empty or len(res_data) > 0:
                     res.append({'dept' : department.name, 'data': res_data, 'color': self._get_day(True)})
         elif 'emp' in data:
             employees = emp_obj.browse(cr, uid, data['emp'], context=context)
