@@ -52,18 +52,23 @@
                                     </t>
                                     <td style="background-color:#d5d5d5;" t-att-colspan="len(get_holidays_status)+1" />
                                 </tr>
-                                <tr t-foreach="obj['data']" t-as="emp">
-                                    <td rowspan="2"><t t-esc="emp['emp']"/></td>
-                                    <t t-foreach="emp['display']" t-as="details">
-                                        &lt;td style=background-color:<t t-esc="details['color']"/> !important /&gt;
-
-                                        &lt;td style=background-color:<t t-esc="details['color']"/> !important /&gt;
-                                    </t>
-                                    <td rowspan="2" class="text-center" t-foreach="get_holidays_status" t-as="status">
-                                        <strong><t t-esc="emp['sum_status'].get(status['object'], 0)"/></strong>
-                                    </td>
-                                    <td rowspan="2" class="text-center"><strong><t t-esc="emp['sum']"/></strong></td>
-                                </tr>
+                                <t t-foreach="obj['data']" t-as="emp">
+                                    <tr>
+                                        <td rowspan="2"><t t-esc="emp['emp']"/></td>
+                                        <t t-foreach="emp['display']" t-as="details">
+                                            &lt;td style=background-color:<t t-esc="details['color']"/> !important /&gt;
+                                        </t>
+                                        <td rowspan="2" class="text-center" t-foreach="get_holidays_status" t-as="status">
+                                            <strong><t t-esc="emp['sum_status'].get(status['object'], 0)"/></strong>
+                                        </td>
+                                        <td rowspan="2" class="text-center"><strong><t t-esc="emp['sum']"/></strong></td>
+                                    </tr>
+                                    <tr>
+                                        <t t-foreach="emp['display']" t-as="details">
+                                            &lt;td style=background-color:<t t-esc="details['color']"/> !important /&gt;
+                                        </t>
+                                    </tr>
+                                </t>
                             </t>
                         </tbody>
                     </table>
