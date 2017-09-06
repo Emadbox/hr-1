@@ -18,7 +18,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
     _inherit = 'report.hr_holidays.report_holidayssummary'
 
     def _compute_working_time(self, cr, uid, context=None):
-        user_obj = self.pool['res.user']
+        user_obj = self.pool['res.users']
         user = user_obj.browse(cr, uid, [uid], context=context)
 
         calendar_obj = self.pool['resource.calendar']
