@@ -27,12 +27,8 @@ class HrHolidaysSummaryReport(models.AbstractModel):
             calendar = calendar_obj.browse(cr, uid, [calendar_ids[0]], context=context)
 
             for attendance in calendar.attendance_ids:
+                self.attendances_midday[int(attendance.dayofweek)] = (attendance.hour_to + attendance.hour_from) / 2
 
-                _logger.info('\n\n' + str(attendance.hour_to) + ' ' + str(attendance.hour_from) + '\n\n')
-
-                self.attendances_midday[int(attendance.dayofweek)] = attendance.hour_to - attendance.hour_from
-
-        _logger.info(str(self.attendances_midday))
 
     def _get_header_info(self, start_date_str, holiday_type):
 
