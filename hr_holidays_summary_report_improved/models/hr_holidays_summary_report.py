@@ -187,7 +187,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         report_obj = self.pool['report']
         holidays_report = report_obj._get_report_from_name(cr, uid, 'hr_holidays.report_holidayssummary')
         selected_records = self.pool['hr.holidays'].browse(cr, uid, ids, context=context)
-        self._compute_working_time()
+        self._compute_working_time(cr, uid, context)
         docargs = {
             'doc_ids': ids,
             'doc_model': holidays_report.model,
