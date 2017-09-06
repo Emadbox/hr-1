@@ -26,8 +26,8 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         if len(calendar_ids) > 0:
             calendar = calendar_obj.browse(cr, uid, [calendar_ids[0]], context=context)
 
-            _logger.info('\n\n'+str(calendar.name)+'\n\n')
-            
+            _logger.info('\n\n'+str(calendar.attendance_ids)+'\n\n')
+
 
     def _get_header_info(self, start_date_str, holiday_type):
 
@@ -130,6 +130,9 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                     self.status_sum_emp.setdefault(holiday.holiday_status_id, 0)
                     self.status_sum_emp[holiday.holiday_status_id] += 1
                     count+=1
+
+                    _logger.info('\n\n'+str(date_from)+' '+str(date_from.weekday())+'\n\n')
+
                 date_from += timedelta(1)
         self.sum = count
         self.sum_days = sum_days
