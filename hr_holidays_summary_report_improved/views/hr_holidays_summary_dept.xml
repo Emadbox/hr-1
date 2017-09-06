@@ -19,7 +19,7 @@
                             <field name="month" />
                             <field name="year" />
                             <field name="holiday_type" />
-                            <field name="company_id" create_edit="false" />
+                            <field name="company_id" no_create_edit="true" no_quick_create="true" />
                         </group>
                         <group>
                             <field name="hide_empty_categories" />
