@@ -20,8 +20,9 @@ class HrHolidaysSummaryReport(models.AbstractModel):
     def _compute_working_time(self, cr, uid, context=None):
         calendar_obj = self.pool['resource.calendar']
         calendar_ids = calendar_obj.search(cr, uid, [], context=context)
+        calendars = calendar_obj.browse(cr, uid, calendar_ids, context=context)
 
-        for calendar in calendar_ids:
+        for calendar in calendars:
             _logger.info('\n\n'+str(calendar.name)+'\n\n')
 
     def _get_header_info(self, start_date_str, holiday_type):
