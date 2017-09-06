@@ -28,7 +28,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
 
             for attendance in calendar.attendance_ids:
 
-                _logger.info(str(attendance.hour_to) + ' ' + attendance.hour_from)
+                _logger.info('\n\n' + str(attendance.hour_to) + ' ' + str(attendance.hour_from) + '\n\n')
 
                 self.attendances_midday[int(attendance.dayofweek)] = attendance.hour_to - attendance.hour_from
 
