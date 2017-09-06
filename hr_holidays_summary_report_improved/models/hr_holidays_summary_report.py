@@ -21,12 +21,13 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         calendar_obj = self.pool['resource.calendar']
         calendar_ids = calendar_obj.search(cr, uid, [('company_id', '=', company_id[0])], context=context)
 
-        _logger.info('\n\n'+str(len(calendar_ids))+'\n\n')
+        self.attendances_midday = [False] * 7
 
         if len(calendar_ids) > 0:
             calendar = calendar_obj.browse(cr, uid, [calendar_ids[0]], context=context)
 
-            _logger.info('\n\n'+str(calendar.attendance_ids)+'\n\n')
+            for attendance in calendar.attendance_ids:
+                self.attendances_midday[attendance.daysofweek] = attendance.hour_to - attendance.hour_from
 
 
     def _get_header_info(self, start_date_str, holiday_type):
@@ -120,18 +121,16 @@ class HrHolidaysSummaryReport(models.AbstractModel):
             for index in range(0, ((date_to - date_from).days + 1)):
                 if date_from >= start_date and date_from <= end_date:
                     if res[(date_from-start_date).days]['color_morning'] == '':
-                        if date_from != date_from_real.date() or date_from_real.hour*60+date_from_real.minute <= 13*60:
+                        if date_from != date_from_real.date() or not self.attendances_midday[date_from] or date_from_real.hour*60+date_from_real.minute <= self.attendances_midday[date_from]*60:
                             res[(date_from-start_date).days]['color_morning'] = holiday.holiday_status_id.color_name
 
                     if res[(date_from-start_date).days]['color_afternoon'] == '':
-                        if date_from != date_to_real.date() or date_to_real.hour*60+date_to_real.minute >= 13*60:
+                        if date_from != date_to_real.date() or not self.attendances_midday[date_from] or date_to_real.hour*60+date_to_real.minute >= self.attendances_midday[date_from]*60:
                             res[(date_from-start_date).days]['color_afternoon'] = holiday.holiday_status_id.color_name
 
                     self.status_sum_emp.setdefault(holiday.holiday_status_id, 0)
                     self.status_sum_emp[holiday.holiday_status_id] += 1
                     count+=1
-
-                    _logger.info('\n\n'+str(date_from)+' '+str(date_from.weekday())+'\n\n')
 
                 date_from += timedelta(1)
         self.sum = count
