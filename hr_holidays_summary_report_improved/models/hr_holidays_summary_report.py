@@ -18,8 +18,11 @@ class HrHolidaysSummaryReport(models.AbstractModel):
     _inherit = 'report.hr_holidays.report_holidayssummary'
 
     def _compute_working_time(self, cr, uid, context=None):
+        user_obj = self.pool['res.user']
+        user = user_obj.browse(cr, uid, [uid], context=context)
+
         calendar_obj = self.pool['resource.calendar']
-        calendar_ids = calendar_obj.search(cr, uid, [], context=context)
+        calendar_ids = calendar_obj.search(cr, uid, [('company_id', '=', user.company_id)], context=context)
         calendars = calendar_obj.browse(cr, uid, calendar_ids, context=context)
 
         for calendar in calendars:
@@ -114,9 +117,6 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                 raise exceptions.ValidationError(_('No duration has been set for a holiday (') + holiday.employee_id.name + _(' from ') + date_from.strftime(DEFAULT_SERVER_DATE_FORMAT) + _(' to ') + date_to.strftime(DEFAULT_SERVER_DATE_FORMAT) + ')')
                 return False
             for index in range(0, ((date_to - date_from).days + 1)):
-
-                _logger.info('\n\ndate_from:'+str(date_from)+' start_date:'+str(start_date)+' end_date:'+str(end_date)+'\n\n')
-
                 if date_from >= start_date and date_from <= end_date:
                     if res[(date_from-start_date).days]['color_morning'] == '':
                         if date_from != date_from_real.date() or date_from_real.hour*60+date_from_real.minute <= 13*60:
