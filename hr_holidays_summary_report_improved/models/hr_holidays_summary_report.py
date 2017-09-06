@@ -17,6 +17,13 @@ _logger = logging.getLogger(__name__)
 class HrHolidaysSummaryReport(models.AbstractModel):
     _inherit = 'report.hr_holidays.report_holidayssummary'
 
+    def _compute_working_time(self, cr, uid, context=None):
+        calendar_obj = self.pool['resource.calendar']
+        calendar_ids = calendar_obj.search(cr, uid, [], context=context)
+
+        for calendar in calendar_ids:
+            _logger.info('\n\n'+str(calendar.name)+'\n\n')
+
     def _get_header_info(self, start_date_str, holiday_type):
 
         month_names = [
@@ -113,14 +120,10 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                     if res[(date_from-start_date).days]['color_morning'] == '':
                         if date_from != date_from_real.date() or date_from_real.hour*60+date_from_real.minute <= 13*60:
                             res[(date_from-start_date).days]['color_morning'] = holiday.holiday_status_id.color_name
-                        else:
-                            res[(date_from-start_date).days]['color_morning'] = '#000000'
 
                     if res[(date_from-start_date).days]['color_afternoon'] == '':
                         if date_from != date_to_real.date() or date_to_real.hour*60+date_to_real.minute >= 13*60:
                             res[(date_from-start_date).days]['color_afternoon'] = holiday.holiday_status_id.color_name
-                        else:
-                            res[(date_from-start_date).days]['color_afternoon'] = '#000000'
 
                     self.status_sum_emp.setdefault(holiday.holiday_status_id, 0)
                     self.status_sum_emp[holiday.holiday_status_id] += 1
@@ -184,6 +187,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         report_obj = self.pool['report']
         holidays_report = report_obj._get_report_from_name(cr, uid, 'hr_holidays.report_holidayssummary')
         selected_records = self.pool['hr.holidays'].browse(cr, uid, ids, context=context)
+        self._compute_working_time()
         docargs = {
             'doc_ids': ids,
             'doc_model': holidays_report.model,
