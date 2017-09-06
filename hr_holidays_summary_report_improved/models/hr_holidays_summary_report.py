@@ -22,7 +22,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         user = user_obj.browse(cr, uid, [uid], context=context)
 
         calendar_obj = self.pool['resource.calendar']
-        calendar_ids = calendar_obj.search(cr, uid, [('company_id', '=', user.company_id)], context=context)
+        calendar_ids = calendar_obj.search(cr, uid, [('company_id', '=', user.company_id.id)], context=context)
         calendars = calendar_obj.browse(cr, uid, calendar_ids, context=context)
 
         for calendar in calendars:
