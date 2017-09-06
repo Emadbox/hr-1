@@ -19,6 +19,7 @@
                             <field name="month" />
                             <field name="year" />
                             <field name="holiday_type" />
+                            <field name="company_id" />
                         </group>
                         <group>
                             <field name="hide_empty_categories" />

@@ -17,16 +17,19 @@ _logger = logging.getLogger(__name__)
 class HrHolidaysSummaryReport(models.AbstractModel):
     _inherit = 'report.hr_holidays.report_holidayssummary'
 
-    def _compute_working_time(self, cr, uid, context=None):
-        user_obj = self.pool['res.users']
-        user = user_obj.browse(cr, uid, [uid], context=context)
+    def _compute_working_time(self, cr, uid, company_id, context=None):
 
-        calendar_obj = self.pool['resource.calendar']
-        calendar_ids = calendar_obj.search(cr, uid, [('company_id', '=', user.company_id.id)], context=context)
-        calendars = calendar_obj.browse(cr, uid, calendar_ids, context=context)
+        _logger.info('\n\n'+str(company_id)+'\n\n')
 
-        for calendar in calendars:
-            _logger.info('\n\n'+str(calendar.name)+'\n\n')
+        # user_obj = self.pool['res.users']
+        # user = user_obj.browse(cr, uid, [uid], context=context)
+
+        # calendar_obj = self.pool['resource.calendar']
+        # calendar_ids = calendar_obj.search(cr, uid, [('company_id', '=', user.company_id.id)], context=context)
+        # calendars = calendar_obj.browse(cr, uid, calendar_ids, context=context)
+
+        # for calendar in calendars:
+        #     _logger.info('\n\n'+str(calendar.name)+'\n\n')
 
     def _get_header_info(self, start_date_str, holiday_type):
 
@@ -188,7 +191,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         report_obj = self.pool['report']
         holidays_report = report_obj._get_report_from_name(cr, uid, 'hr_holidays.report_holidayssummary')
         selected_records = self.pool['hr.holidays'].browse(cr, uid, ids, context=context)
-        self._compute_working_time(cr, uid, context)
+        self._compute_working_time(cr, uid, data['form']['company_id'], context)
         docargs = {
             'doc_ids': ids,
             'doc_model': holidays_report.model,
