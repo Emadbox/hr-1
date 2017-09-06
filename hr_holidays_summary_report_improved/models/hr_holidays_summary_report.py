@@ -111,12 +111,19 @@ class HrHolidaysSummaryReport(models.AbstractModel):
 
                 if date_from >= start_date and date_from <= end_date:
                     if res[(date_from-start_date).days]['color_morning'] == '':
-                        if date_from != date_from_real.date() or date_from_real.hour*60+date_from_real.minute <= 13*60:
-                            res[(date_from-start_date).days]['color_morning'] = holiday.holiday_status_id.color_name
-
+                        res[(date_from-start_date).days]['color_morning'] = holiday.holiday_status_id.color_name
                     if res[(date_from-start_date).days]['color_afternoon'] == '':
-                        if date_from != date_to_real.date() or date_from_real.hour*60+date_from_real.minute >= 13*60:
-                            res[(date_from-start_date).days]['color_afternoon'] = holiday.holiday_status_id.color_name
+                        res[(date_from-start_date).days]['color_afternoon'] = holiday.holiday_status_id.color_name
+                    #     if date_from != date_from_real.date() or date_from_real.hour*60+date_from_real.minute <= 13*60:
+                    #         res[(date_from-start_date).days]['color_morning'] = holiday.holiday_status_id.color_name
+                    #     else:
+                    #         res[(date_from-start_date).days]['color_morning'] = '#000000'
+
+                    # if res[(date_from-start_date).days]['color_afternoon'] == '':
+                    #     if date_from != date_to_real.date() or date_from_real.hour*60+date_from_real.minute >= 13*60:
+                    #         res[(date_from-start_date).days]['color_afternoon'] = holiday.holiday_status_id.color_name
+                    #     else:
+                    #         res[(date_from-start_date).days]['color_afternoon'] = '#000000'
 
                     self.status_sum_emp.setdefault(holiday.holiday_status_id, 0)
                     self.status_sum_emp[holiday.holiday_status_id] += 1

@@ -55,7 +55,7 @@
                                 <t t-foreach="obj['data']" t-as="emp">
                                     <tr>
                                         <td rowspan="2"><t t-esc="emp['emp']"/></td>
-                                        <td class="text-center oe_leftfit oe_rightfit">AM</td>
+                                        <td class="text-center oe_leftfit oe_rightfit" style="font-size: 8px; min-width: 18px">AM</td>
                                         <t t-foreach="emp['display']" t-as="details">
                                             &lt;td style=background-color:<t t-esc="details['color_morning']"/> !important /&gt;
                                         </t>
@@ -65,7 +65,7 @@
                                         <td rowspan="2" class="text-center"><strong><t t-esc="emp['sum']"/></strong></td>
                                     </tr>
                                     <tr>
-                                        <td class="text-center oe_leftfit oe_rightfit">PM</td>
+                                        <td class="text-center oe_leftfit oe_rightfit" style="font-size: 8px; min-width: 18px">PM</td>
                                         <t t-foreach="emp['display']" t-as="details">
                                             &lt;td style=background-color:<t t-esc="details['color_afternoon']"/> !important /&gt;
                                         </t>
