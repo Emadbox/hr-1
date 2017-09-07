@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Form -->
+        <record model="ir.ui.view" id="view_hr_holidays_improved">
+            <field name="name">view_hr_holidays_improved</field>
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='date_from']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='date_to']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                    </xpath>
+
+                    <xpath expr="//field[@name='date_from']" position="after">
+                        <field name="date_day_from" no_label="1" />
+                        <field name="day_time_from" no_label="1" />
+                    </xpath>
+                    <xpath expr="//field[@name='date_to']" position="after">
+                        <field name="date_day_to" no_label="1" />
+                        <field name="day_time_to" no_label="1" />
+                    </xpath>
+                </data>
+            </field>
+        </record>
+    </data>
+</openerp>

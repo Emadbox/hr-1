@@ -33,7 +33,7 @@ class HrHolidaysSummaryDept(models.Model):
     hide_no_leaves_emp = fields.Boolean(string="Hide Employees Without Leaves", default=True)
 
     depts = fields.Many2many(default=lambda self: self.env['hr.department'].search([]))
-
+ 
     @api.one
     @api.onchange('month', 'year')
     def onchange_date(self):
