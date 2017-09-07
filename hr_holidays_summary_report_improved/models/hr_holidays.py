@@ -43,7 +43,7 @@ class HrHolidays(models.Model):
 
                 _logger.info('\n\nc\n\n')
 
-                if int(attendance.dayofweek) == date_day_from.weekday():
+                if int(attendance.dayofweek) == self.date_day_from.weekday():
 
                     _logger.info('\n\nd\n\n')
 
@@ -51,7 +51,7 @@ class HrHolidays(models.Model):
                     midday = (attendance.hour_to + attendance.hour_from) / 2
                     break
 
-        date_from = date_day_from + ' ' + self.float_time_convert(midday if self.day_time_from=='midday' else morning)
+        date_from = self.date_day_from + ' ' + self.float_time_convert(midday if self.day_time_from=='midday' else morning)
 
     # @api.one
     # @api.onchange('date_day_to', 'day_time_to')
@@ -63,9 +63,9 @@ class HrHolidays(models.Model):
 
     #     if len(calendar_ids) > 0:
     #         for attendance in calendar_ids[0].attendance_ids:
-    #             if int(attendance.dayofweek) == date_day_to.weekday():
+    #             if int(attendance.dayofweek) == self.date_day_to.weekday():
     #                 evening = attendance.hour_to
     #                 midday = (attendance.hour_to + attendance.hour_from) / 2
     #                 break
 
-    #     date_to = date_day_to + ' ' + self.float_time_convert(midday if self.day_time_to=='evening' else evening)
+    #     date_to = self.date_day_to + ' ' + self.float_time_convert(midday if self.day_time_to=='evening' else evening)
