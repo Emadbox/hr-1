@@ -27,34 +27,36 @@ class HrHolidays(models.Model):
 
     @api.one
     @api.onchange('date_day_from', 'day_time_from')
-    def onchange_date(self):
+    def onchange_date_from(self):
         calendar_ids = self.env['resource.calendar'].search([('company_id', '=', self.employee_id.company_id.id)])
 
         morning = 8
         midday = 13
 
-        if len(calendar_ids) > 0:
-            for attendance in calendar_ids[0].attendance_ids:
-                if int(attendance.dayofweek) == date_day_from.weekday():
-                    morning = attendance.hour_from
-                    midday = (attendance.hour_to + attendance.hour_from) / 2
-                    break
+        _logger.info('\n\na\n\n')
 
-        date_from = date_day_from + ' ' + self.float_time_convert(midday if self.day_time_from=='midday' else morning)
+        # if len(calendar_ids) > 0:
+        #     for attendance in calendar_ids[0].attendance_ids:
+        #         if int(attendance.dayofweek) == date_day_from.weekday():
+        #             morning = attendance.hour_from
+        #             midday = (attendance.hour_to + attendance.hour_from) / 2
+        #             break
 
-    @api.one
-    @api.onchange('date_day_to', 'day_time_to')
-    def onchange_date(self):
-        calendar_ids = self.env['resource.calendar'].search([('company_id', '=', self.employee_id.company_id.id)])
+        # date_from = date_day_from + ' ' + self.float_time_convert(midday if self.day_time_from=='midday' else morning)
 
-        evening = 18
-        midday = 12
+    # @api.one
+    # @api.onchange('date_day_to', 'day_time_to')
+    # def onchange_date_to(self):
+    #     calendar_ids = self.env['resource.calendar'].search([('company_id', '=', self.employee_id.company_id.id)])
 
-        if len(calendar_ids) > 0:
-            for attendance in calendar_ids[0].attendance_ids:
-                if int(attendance.dayofweek) == date_day_to.weekday():
-                    evening = attendance.hour_to
-                    midday = (attendance.hour_to + attendance.hour_from) / 2
-                    break
+    #     evening = 18
+    #     midday = 13
 
-        date_to = date_day_to + ' ' + self.float_time_convert(midday if self.day_time_to=='evening' else evening)
+    #     if len(calendar_ids) > 0:
+    #         for attendance in calendar_ids[0].attendance_ids:
+    #             if int(attendance.dayofweek) == date_day_to.weekday():
+    #                 evening = attendance.hour_to
+    #                 midday = (attendance.hour_to + attendance.hour_from) / 2
+    #                 break
+
+    #     date_to = date_day_to + ' ' + self.float_time_convert(midday if self.day_time_to=='evening' else evening)
