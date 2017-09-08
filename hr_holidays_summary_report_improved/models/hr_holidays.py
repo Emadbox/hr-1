@@ -32,6 +32,10 @@ class HrHolidays(models.Model):
     @api.one
     @api.onchange('date_day_from', 'day_time_from')
     def onchange_date_from(self):
+
+        if not self.date_day_from or not day_time_from:
+            return
+
         calendar_ids = self.env['resource.calendar'].search([('company_id', '=', self.employee_id.company_id.id)])
 
         morning = 8
@@ -58,6 +62,10 @@ class HrHolidays(models.Model):
     @api.one
     @api.onchange('date_day_to', 'day_time_to')
     def onchange_date_to(self):
+
+        if not self.date_day_to or not day_time_to:
+            return
+
         calendar_ids = self.env['resource.calendar'].search([('company_id', '=', self.employee_id.company_id.id)])
 
         evening = 18
