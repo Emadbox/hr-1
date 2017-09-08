@@ -45,7 +45,9 @@ class HrHolidays(models.Model):
                     midday = (attendance.hour_to + attendance.hour_from) / 2
                     break
 
-        date_from = self.date_day_from + ' ' + self.float_time_convert(midday if self.day_time_from=='midday' else morning)
+        self.update({
+            'date_from': self.date_day_from + ' ' + self.float_time_convert(midday if self.day_time_from=='midday' else morning)
+        })
 
     # @api.one
     # @api.onchange('date_day_to', 'day_time_to')
