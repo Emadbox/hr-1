@@ -6,6 +6,7 @@ import time
 from datetime import datetime
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 import math
+import pytz
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -47,10 +48,13 @@ class HrHolidays(models.Model):
 
         date_str_local = self.date_day_from + ' ' + self.float_time_convert(midday if self.day_time_from=='midday' else morning) + ':00'
 
-        date_local = datetime.strptime(date_str_local, DEFAULT_SERVER_DATETIME_FORMAT)
+        #date_local = datetime.strptime(date_str_local, DEFAULT_SERVER_DATETIME_FORMAT)
+
+        timezone = pytz.timezone(self._context.get('tz') or 'UTC')
+        date_str_utc = timezone.localize(datetime.strptime(date_str_local, '%Y-%m-%d %H:%M:%S')).astimezone(pytz.UTC)
 
         self.update({
-            'date_from': fields.Datetime.context_timestamp(self, timestamp=date_local)
+            'date_from': date_str_utc #fields.Datetime.context_timestamp(self, timestamp=date_local)
         })
 
     # @api.one
