@@ -37,11 +37,8 @@ class HrHolidays(models.Model):
 
         if len(calendar_ids) > 0:
             for attendance in calendar_ids[0].attendance_ids:
-                date = datetime.strptime(self.date_day_from, DEFAULT_SERVER_DATE_FORMAT)
-                # A faire en nouvelle api
-                date = fields.Datetime.context_timestamp(date_from_real).date()
+                date = datetime.strptime(self.date_day_from, DEFAULT_SERVER_DATE_FORMAT).date
 
-                # et utiliser date pour weekday()
                 if int(attendance.dayofweek) == date.weekday():
                     morning = attendance.hour_from
                     midday = (attendance.hour_to + attendance.hour_from) / 2
