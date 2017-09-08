@@ -5,6 +5,7 @@ from openerp import models, fields, api, exceptions, _
 import time
 from datetime import datetime
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+import math
 
 import logging
 _logger = logging.getLogger(__name__)
