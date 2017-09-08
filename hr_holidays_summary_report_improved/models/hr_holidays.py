@@ -37,7 +37,7 @@ class HrHolidays(models.Model):
 
         if len(calendar_ids) > 0:
             for attendance in calendar_ids[0].attendance_ids:
-                date = datetime.strptime(self.date_day_from, DEFAULT_SERVER_DATE_FORMAT).date
+                date = datetime.strptime(self.date_day_from, DEFAULT_SERVER_DATE_FORMAT)
 
                 if int(attendance.dayofweek) == date.weekday():
                     morning = attendance.hour_from
