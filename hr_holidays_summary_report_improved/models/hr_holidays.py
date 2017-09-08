@@ -36,17 +36,21 @@ class HrHolidays(models.Model):
         morning = 8
         midday = 13
 
+        date = datetime.strptime(self.date_day_from, DEFAULT_SERVER_DATE_FORMAT)
+
         if len(calendar_ids) > 0:
             for attendance in calendar_ids[0].attendance_ids:
-                date = datetime.strptime(self.date_day_from, DEFAULT_SERVER_DATE_FORMAT)
-
                 if int(attendance.dayofweek) == date.weekday():
                     morning = attendance.hour_from
                     midday = (attendance.hour_to + attendance.hour_from) / 2
                     break
 
+        date_str_local = self.date_day_from + ' ' + self.float_time_convert(midday if self.day_time_from=='midday' else morning) + ':00'
+
+        date_local = datetime.strptime(date_str_local, DEFAULT_SERVER_DATE_FORMAT)
+
         self.update({
-            'date_from': self.date_day_from + ' ' + self.float_time_convert(midday if self.day_time_from=='midday' else morning) + ':00'
+            'date_from': fields.Datetime.context_timestamp(self, timestamp=date_local)
         })
 
     # @api.one
