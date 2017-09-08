@@ -121,11 +121,11 @@ class HrHolidaysSummaryReport(models.AbstractModel):
             for index in range(0, ((date_to - date_from).days + 1)):
                 if date_from >= start_date and date_from <= end_date:
                     if res[(date_from-start_date).days]['color_morning'] == '':
-                        if date_from != date_from_real.date() or not self.attendances_midday[date_from.weekday()] or date_from_real.hour*60+date_from_real.minute <= self.attendances_midday[date_from.weekday()]*60 + 15:
+                        if date_from != date_from_real.date() or not self.attendances_midday[date_from.weekday()] or date_from_real.hour*60+date_from_real.minute <= self.attendances_midday[date_from.weekday()]*60:
                             res[(date_from-start_date).days]['color_morning'] = holiday.holiday_status_id.color_name
 
                     if res[(date_from-start_date).days]['color_afternoon'] == '':
-                        if date_from != date_to_real.date() or not self.attendances_midday[date_from.weekday()] or date_to_real.hour*60+date_to_real.minute >= self.attendances_midday[date_from.weekday()]*60 - 15:
+                        if date_from != date_to_real.date() or not self.attendances_midday[date_from.weekday()] or date_to_real.hour*60+date_to_real.minute >= self.attendances_midday[date_from.weekday()]*60:
                             res[(date_from-start_date).days]['color_afternoon'] = holiday.holiday_status_id.color_name
 
                     self.status_sum_emp.setdefault(holiday.holiday_status_id, 0)
