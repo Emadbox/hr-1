@@ -16,12 +16,12 @@
                     </xpath>
 
                     <xpath expr="//field[@name='date_from']" position="after">
-                        <field name="date_day_from" no_label="1" required="1" />
-                        <field name="day_time_from" no_label="1" required="1" />
+                        <field name="date_day_from" no_label="1" required="1" class="oe_inline" />
+                        <field name="day_time_from" no_label="1" required="1" class="oe_inline" />
                     </xpath>
                     <xpath expr="//field[@name='date_to']" position="after">
-                        <field name="date_day_to" no_label="1" required="1" />
-                        <field name="day_time_to" no_label="1" required="1" />
+                        <field name="date_day_to" no_label="1" required="1" class="oe_inline" />
+                        <field name="day_time_to" no_label="1" required="1" class="oe_inline" />
                     </xpath>
                 </data>
             </field>
