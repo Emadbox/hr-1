@@ -189,6 +189,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         else:
             holiday_datas = self.status_sum
 
+        res = []
         for status in holiday_datas:
             res.append({'color': status.color_name, 'name': status.name, 'object': status})
         return res
