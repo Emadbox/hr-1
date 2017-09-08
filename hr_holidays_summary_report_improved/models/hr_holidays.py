@@ -46,7 +46,7 @@ class HrHolidays(models.Model):
                     break
 
         self.update({
-            'date_from': self.date_day_from + ' ' + self.float_time_convert(midday if self.day_time_from=='midday' else morning)
+            'date_from': self.date_day_from + ' ' + self.float_time_convert(midday if self.day_time_from=='midday' else morning) + ':00'
         })
 
     # @api.one
