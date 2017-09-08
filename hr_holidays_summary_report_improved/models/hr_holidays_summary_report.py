@@ -108,9 +108,11 @@ class HrHolidaysSummaryReport(models.AbstractModel):
             # Convert date to user timezone, otherwise the report will not be consistent with the
             # value displayed in the interface.
             date_from_real = datetime.strptime(holiday.date_from, DEFAULT_SERVER_DATETIME_FORMAT)
-            date_from = osv.fields.datetime.context_timestamp(cr, uid, date_from_real, context=context).date()
+            date_from_real = osv.fields.datetime.context_timestamp(cr, uid, date_from_real, context=context)
+            date_from = date_from_real.date()
             date_to_real = datetime.strptime(holiday.date_to, DEFAULT_SERVER_DATETIME_FORMAT)
-            date_to = osv.fields.datetime.context_timestamp(cr, uid, date_to_real, context=context).date()
+            date_to_real = osv.fields.datetime.context_timestamp(cr, uid, date_to_real, context=context)
+            date_to = date_to_real.date()
             if holiday.number_of_days_temp and holiday.number_of_days_temp > 0:
                 sum_days += holiday.number_of_days_temp
                 sum_days_status.setdefault(holiday.holiday_status_id, 0)
