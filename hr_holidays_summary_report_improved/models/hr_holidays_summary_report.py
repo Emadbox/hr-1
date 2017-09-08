@@ -17,6 +17,19 @@ _logger = logging.getLogger(__name__)
 class HrHolidaysSummaryReport(models.AbstractModel):
     _inherit = 'report.hr_holidays.report_holidayssummary'
 
+    def _compute_working_time(self, cr, uid, company_id, context=None):
+        calendar_obj = self.pool['resource.calendar']
+        calendar_ids = calendar_obj.search(cr, uid, [('company_id', '=', company_id[0])], context=context)
+
+        self.attendances_midday = [False] * 7
+
+        if len(calendar_ids) > 0:
+            calendar = calendar_obj.browse(cr, uid, [calendar_ids[0]], context=context)
+
+            for attendance in calendar.attendance_ids:
+                self.attendances_midday[int(attendance.dayofweek)] = (attendance.hour_to + attendance.hour_from) / 2
+
+
     def _get_header_info(self, start_date_str, holiday_type):
 
         month_names = [
@@ -83,9 +96,10 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         end_date = osv.fields.datetime.context_timestamp(cr, uid, end_date, context=context).date()
         for index in range(0, (self.end_date - self.start_date).days + 1):
             current = start_date + timedelta(index)
-            res.append({'day': current.day, 'color': ''})
+            res.append({'day': current.day, 'color_morning': '', 'color_afternoon': ''})
             if current.strftime('%a') == 'Sat' or current.strftime('%a') == 'Sun':
-                res[index]['color'] = '#ababab'
+                res[index]['color_morning'] = '#ababab'
+                res[index]['color_afternoon'] = '#ababab'
         # count and get leave summary details.
         holidays_obj = self.pool['hr.holidays']
         holiday_type = ['confirm','validate'] if holiday_type == 'both' else ['confirm'] if holiday_type == 'Confirmed' else ['validate']
@@ -93,10 +107,12 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         for holiday in holidays_obj.browse(cr, uid, holidays_ids, context=context):
             # Convert date to user timezone, otherwise the report will not be consistent with the
             # value displayed in the interface.
-            date_from = datetime.strptime(holiday.date_from, DEFAULT_SERVER_DATETIME_FORMAT)
-            date_from = osv.fields.datetime.context_timestamp(cr, uid, date_from, context=context).date()
-            date_to = datetime.strptime(holiday.date_to, DEFAULT_SERVER_DATETIME_FORMAT)
-            date_to = osv.fields.datetime.context_timestamp(cr, uid, date_to, context=context).date()
+            date_from_real = datetime.strptime(holiday.date_from, DEFAULT_SERVER_DATETIME_FORMAT)
+            date_from_real = osv.fields.datetime.context_timestamp(cr, uid, date_from_real, context=context)
+            date_from = date_from_real.date()
+            date_to_real = datetime.strptime(holiday.date_to, DEFAULT_SERVER_DATETIME_FORMAT)
+            date_to_real = osv.fields.datetime.context_timestamp(cr, uid, date_to_real, context=context)
+            date_to = date_to_real.date()
             if holiday.number_of_days_temp and holiday.number_of_days_temp > 0:
                 sum_days += holiday.number_of_days_temp
                 sum_days_status.setdefault(holiday.holiday_status_id, 0)
@@ -106,11 +122,18 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                 return False
             for index in range(0, ((date_to - date_from).days + 1)):
                 if date_from >= start_date and date_from <= end_date:
-                    if res[(date_from-start_date).days]['color'] == '':
-                        res[(date_from-start_date).days]['color'] = holiday.holiday_status_id.color_name
+                    if res[(date_from-start_date).days]['color_morning'] == '':
+                        if date_from != date_from_real.date() or not self.attendances_midday[date_from.weekday()] or date_from_real.hour*60+date_from_real.minute < self.attendances_midday[date_from.weekday()]*60:
+                            res[(date_from-start_date).days]['color_morning'] = holiday.holiday_status_id.color_name
+
+                    if res[(date_from-start_date).days]['color_afternoon'] == '':
+                        if date_from != date_to_real.date() or not self.attendances_midday[date_from.weekday()] or date_to_real.hour*60+date_to_real.minute > self.attendances_midday[date_from.weekday()]*60:
+                            res[(date_from-start_date).days]['color_afternoon'] = holiday.holiday_status_id.color_name
+
                     self.status_sum_emp.setdefault(holiday.holiday_status_id, 0)
                     self.status_sum_emp[holiday.holiday_status_id] += 1
                     count+=1
+
                 date_from += timedelta(1)
         self.sum = count
         self.sum_days = sum_days
@@ -125,13 +148,11 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         if 'depts' in data:
             for department in department_obj.browse(cr, uid, data['depts'], context=context):
                 res_data = []
-                employee_ids = emp_obj.search(cr, uid, [('department_id', '=', department.id)], context=context)
+                employee_ids = emp_obj.search(cr, uid, [('department_id', '=', department.id), ('company_id', '=', data['company_id'][0])], context=context)
                 employees = emp_obj.browse(cr, uid, employee_ids, context=context)
-                dept_empty = True
                 for emp in employees:
                     display = self._get_leaves_summary(cr, uid, ids, emp.id, data['holiday_type'], context=context)
                     if not hide_no_leaves_emp or self.sum > 0:
-                        dept_empty = False
                         res_data.append({
                             'emp': emp.name,
                             'display': display,
@@ -141,7 +162,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                         for status in self.status_sum_emp:
                             self.status_sum.setdefault(status, 0)
                             self.status_sum[status] += self.status_sum_emp[status]
-                if not hide_empty or not dept_empty:
+                if not hide_empty or len(res_data) > 0:
                     res.append({'dept' : department.name, 'data': res_data, 'color': self._get_day(True)})
         elif 'emp' in data:
             employees = emp_obj.browse(cr, uid, data['emp'], context=context)
@@ -162,9 +183,14 @@ class HrHolidaysSummaryReport(models.AbstractModel):
 
     def _get_holidays_status(self, cr, uid, ids, hide_empty, context=None):
         if not hide_empty:
-            return super(HrHolidaysSummaryReport, self)._get_holidays_status(cr, uid, ids, context=context)
+            holiday_obj = self.pool['hr.holidays.status']
+            holiday_ids = holiday_obj.search(cr, uid, [], context=context)
+            holiday_datas = holiday_obj.browse(cr, uid, holiday_ids, context=context)
+        else:
+            holiday_datas = self.status_sum
+
         res = []
-        for status in self.status_sum:
+        for status in holiday_datas:
             res.append({'color': status.color_name, 'name': status.name, 'object': status})
         return res
 
@@ -172,6 +198,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         report_obj = self.pool['report']
         holidays_report = report_obj._get_report_from_name(cr, uid, 'hr_holidays.report_holidayssummary')
         selected_records = self.pool['hr.holidays'].browse(cr, uid, ids, context=context)
+        self._compute_working_time(cr, uid, data['form']['company_id'], context)
         docargs = {
             'doc_ids': ids,
             'doc_model': holidays_report.model,

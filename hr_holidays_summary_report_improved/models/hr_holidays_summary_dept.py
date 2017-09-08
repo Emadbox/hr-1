@@ -26,13 +26,14 @@ class HrHolidaysSummaryDept(models.Model):
         ('12', 'December')
     ], string="Month", required=True, default=lambda *a: time.strftime('%m'))
     year = fields.Integer(string="Year", required=True, default=lambda *a: int(time.strftime('%Y')))
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('hr.holidays.summary.dept'))
 
     hide_empty_categories = fields.Boolean(string="Hide Empty Departments", default=True)
     hide_empty_status = fields.Boolean(string="Hide Empty Leave Types", default=True)
     hide_no_leaves_emp = fields.Boolean(string="Hide Employees Without Leaves", default=True)
 
     depts = fields.Many2many(default=lambda self: self.env['hr.department'].search([]))
-
+ 
     @api.one
     @api.onchange('month', 'year')
     def onchange_date(self):

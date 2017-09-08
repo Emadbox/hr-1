@@ -25,6 +25,8 @@
     'depends': ['hr'],
 
     'data': [
+        'views/hr_holidays.xml',
+        'views/hr_holidays_status.xml',
         'views/hr_holidays_summary_dept.xml',
         'templates/report_hr_holidays_summary.xml'
     ],
