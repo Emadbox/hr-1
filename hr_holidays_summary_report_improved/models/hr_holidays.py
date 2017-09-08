@@ -3,6 +3,7 @@
 from openerp import models, fields, api, exceptions, _
 
 import time
+import datetime
 
 import logging
 _logger = logging.getLogger(__name__)
