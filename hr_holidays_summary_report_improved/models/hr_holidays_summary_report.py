@@ -124,7 +124,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
                 if date_from >= start_date and date_from <= end_date:
                     if res[(date_from-start_date).days]['color_morning'] == '':
                         if date_from != date_from_real.date() or not self.attendances_midday[date_from.weekday()] or date_from_real.hour*60+date_from_real.minute < self.attendances_midday[date_from.weekday()]*60:
-                            _logger.info('\n\n'+holiday.employee_id.partner_id.name+' '+holiday.date_from+' '+str(self.attendances_midday[date_from.weekday()])+'\n\n')
+                            _logger.info('\n\n'+holiday.date_from+' '+str(self.attendances_midday[date_from.weekday()])+'\n\n')
                             res[(date_from-start_date).days]['color_morning'] = holiday.holiday_status_id.color_name
 
                     if res[(date_from-start_date).days]['color_afternoon'] == '':
