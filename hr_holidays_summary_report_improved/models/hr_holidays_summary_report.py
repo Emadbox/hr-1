@@ -183,9 +183,13 @@ class HrHolidaysSummaryReport(models.AbstractModel):
 
     def _get_holidays_status(self, cr, uid, ids, hide_empty, context=None):
         if not hide_empty:
-            return super(HrHolidaysSummaryReport, self)._get_holidays_status(cr, uid, ids, context=context)
-        res = []
-        for status in self.status_sum:
+            holiday_obj = self.pool['hr.holidays.status']
+            holiday_ids = holiday_obj.search(cr, uid, [], context=context)
+            holiday_datas = holiday_obj.browse(cr, uid, holiday_ids, context=context)
+        else:
+            holiday_datas = self.status_sum
+
+        for status in holiday_datas:
             res.append({'color': status.color_name, 'name': status.name, 'object': status})
         return res
 
