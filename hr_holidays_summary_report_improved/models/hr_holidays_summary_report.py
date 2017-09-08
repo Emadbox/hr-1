@@ -140,7 +140,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         self.sum_days_status = sum_days_status
         return res
 
-    def _get_data_from_report(self, cr, uid, ids, data, hide_empty, hide_no_leaves_emp, company_id, context=None):
+    def _get_data_from_report(self, cr, uid, ids, data, hide_empty, hide_no_leaves_emp, context=None):
         res = []
         self.status_sum = {}
         emp_obj = self.pool['hr.employee']
