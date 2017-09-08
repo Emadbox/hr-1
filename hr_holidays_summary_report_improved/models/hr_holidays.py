@@ -33,20 +33,14 @@ class HrHolidays(models.Model):
         morning = 8
         midday = 13
 
-        _logger.info('\n\na\n\n')
-
         if len(calendar_ids) > 0:
-
-            _logger.info('\n\nb\n\n')
-
             for attendance in calendar_ids[0].attendance_ids:
+                date = datetime.strptime(self.date_day_from, DEFAULT_SERVER_DATE_FORMAT)
+                # A faire en nouvelle api
+                date = fields.Datetime.context_timestamp(date_from_real).date()
 
-                _logger.info('\n\nc\n\n')
-
-                if int(attendance.dayofweek) == self.date_day_from.weekday():
-
-                    _logger.info('\n\nd\n\n')
-
+                # et utiliser date pour weekday()
+                if int(attendance.dayofweek) == date.weekday():
                     morning = attendance.hour_from
                     midday = (attendance.hour_to + attendance.hour_from) / 2
                     break
