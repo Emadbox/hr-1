@@ -72,7 +72,7 @@ class HrHolidays(models.Model):
                     midday = (attendance.hour_to + attendance.hour_from) / 2
                     break
 
-        date_str_local = self.date_day_to + ' ' + self.float_time_convert(midday if self.day_time_to=='midday' else morning) + ':00'
+        date_str_local = self.date_day_to + ' ' + self.float_time_convert(midday if self.day_time_to=='midday' else evening) + ':00'
 
         timezone = pytz.timezone(self._context.get('tz') or 'UTC')
         date_str_utc = timezone.localize(datetime.strptime(date_str_local, '%Y-%m-%d %H:%M:%S')).astimezone(pytz.UTC)
