@@ -148,7 +148,7 @@ class HrHolidaysSummaryReport(models.AbstractModel):
         if 'depts' in data:
             for department in department_obj.browse(cr, uid, data['depts'], context=context):
                 res_data = []
-                employee_ids = emp_obj.search(cr, uid, [('department_id', '=', department.id), ('company_id', '=', data['form']['company_id'][0])], context=context)
+                employee_ids = emp_obj.search(cr, uid, [('department_id', '=', department.id), ('company_id', '=', data['company_id'][0])], context=context)
                 employees = emp_obj.browse(cr, uid, employee_ids, context=context)
                 for emp in employees:
                     display = self._get_leaves_summary(cr, uid, ids, emp.id, data['holiday_type'], context=context)
