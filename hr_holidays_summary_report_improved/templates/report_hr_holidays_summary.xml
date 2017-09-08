@@ -60,7 +60,7 @@
                                             &lt;td style=background-color:<t t-esc="details['color_morning']"/> !important /&gt;
                                         </t>
                                         <td rowspan="2" class="text-center" t-foreach="get_holidays_status" t-as="status">
-                                            <strong><t t-esc="emp['sum_status'].get(status['object'], 0)"/></strong>
+                                            <strong><t t-esc="emp.get('sum_status', {}).get(status['object'], 0)"/></strong>
                                         </td>
                                         <td rowspan="2" class="text-center"><strong><t t-esc="emp['sum']"/></strong></td>
                                     </tr>
