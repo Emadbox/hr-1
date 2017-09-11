@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp import models, fields, api, exceptions, _
+from openerp import exceptions
+from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp import osv
 
@@ -14,7 +15,7 @@ import logging
 _logger = logging.getLogger(__name__)
     
     
-class HrHolidaysSummaryReport(models.AbstractModel):
+class HrHolidaysSummaryReport(osv.AbstractModel):
     _inherit = 'report.hr_holidays.report_holidayssummary'
 
     def _compute_working_time(self, cr, uid, company_id, context=None):
