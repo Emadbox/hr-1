@@ -15,7 +15,7 @@ import logging
 _logger = logging.getLogger(__name__)
     
     
-class HrHolidaysSummaryReport(osv.AbstractModel):
+class HrHolidaysSummaryReport(osv.osv.AbstractModel):
     _inherit = 'report.hr_holidays.report_holidayssummary'
 
     def _compute_working_time(self, cr, uid, company_id, context=None):
