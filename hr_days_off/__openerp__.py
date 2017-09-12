@@ -31,11 +31,11 @@
 This module creates the non working days in OpenERP using a generator(for the week-end) or manually.
 It's use to improve the holidays requests by taking into account the bank holidays.""",
     'depends' : ['base','hr','hr_holidays'],
-    'init_xml' : [],
-    'demo_xml' : [],
     'images': ['images/leave.png','images/periods.png'],
-    'update_xml' : ['day_off.xml','hr_holidays_view.xml','security/ir.model.access.csv'],
-    'test': [],
-    'active' : False,
+    'data' : [
+        'views/day_off.xml',
+        'views/hr_holidays_view.xml',
+        'security/ir.model.access.csv'
+    ],
     'installable' : True,
 }

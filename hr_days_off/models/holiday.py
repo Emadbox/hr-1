@@ -105,7 +105,8 @@ class hr_holidays(osv.osv):
         return format(hour, '02') + ':' + format(minute, '02')
 
     def get_worktime(self, cr, uid, ids, date):
-        calendar_ids = self.pool.get('resource.calendar').search([('company_id', '=', self.employee_id.company_id.id)])
+        calendar_obj = self.pool.get('resource.calendar')
+        calendar_ids = calendar_obj.search(cr, uid, [('company_id', '=', self.employee_id.company_id.id)], context=context)
 
         worktime = {
             'morning': 8.5,
@@ -114,7 +115,9 @@ class hr_holidays(osv.osv):
         }
 
         if len(calendar_ids) > 0:
-            for attendance in calendar_ids[0].attendance_ids:
+            calendar = calendar_obj.browse(cr, uid, [calendar_ids[0]], context=context)
+
+            for attendance in calendar.attendance_ids:
                 if int(attendance.dayofweek) == datetime.strptime(date, DEFAULT_SERVER_DATE_FORMAT).weekday():
                     worktime['morning'] = attendance.hour_from
                     worktime['midday'] = (attendance.hour_to + attendance.hour_from) / 2

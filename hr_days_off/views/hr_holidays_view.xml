@@ -15,11 +15,11 @@
 
                 <xpath expr="//field[@name='date_from']" position="attributes">
                     <attribute name="on_change" />
-                    <attribute name="class">oe_inline oe_read_only</attribute>
+                    <!-- <attribute name="class">oe_inline oe_read_only</attribute> -->
                 </xpath>
                 <xpath expr="//field[@name='date_to']" position="attributes">
                     <attribute name="on_change" />
-                    <attribute name="class">oe_inline oe_read_only</attribute>
+                    <!-- <attribute name="class">oe_inline oe_read_only</attribute> -->
                 </xpath>
 
                 <xpath expr="//field[@name='date_from']" position="after">
