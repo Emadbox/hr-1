@@ -40,8 +40,6 @@ class HrHolidays(models.Model):
             raise exceptions.ValidationError(_('The days off are not configured for this year(') + year_now + ')')
             return False
 
-        date_from = datetime.strptime(date_from, DEFAULT_SERVER_DATETIME_FORMAT)
-        date_to = datetime.strptime(date_to, DEFAULT_SERVER_DATETIME_FORMAT)
         user_company = self.env.user.company_id
 
         date_iterator = date_from
@@ -94,7 +92,7 @@ class HrHolidays(models.Model):
     @api.model
     def to_utc(self, date_local):
         timezone = pytz.timezone(self._context.get('tz') or 'UTC')
-        return timezone.localize(datetime.strptime(date_local, '%Y-%m-%d %H:%M:%S')).astimezone(pytz.UTC)
+        return timezone.localize(datetime.strptime(date_local, DEFAULT_SERVER_DATETIME_FORMAT)).astimezone(pytz.UTC)
         
     @api.one
     @api.onchange('date_day_from', 'day_time_from')
@@ -108,7 +106,7 @@ class HrHolidays(models.Model):
 
         self.update({
             'date_from': date_time,
-            'number_of_days_temp': self._compute_holidays_duration(date_time, self.date_to)
+            'number_of_days_temp': self._compute_holidays_duration(date_time, datetime.strptime(self.date_to, DEFAULT_SERVER_DATETIME_FORMAT))
         })
 
     @api.one
@@ -123,5 +121,5 @@ class HrHolidays(models.Model):
 
         self.update({
             'date_to': date_time,
-            'number_of_days_temp': self._compute_holidays_duration(self.date_from, date_time)
+            'number_of_days_temp': self._compute_holidays_duration(datetime.strptime(self.date_from, DEFAULT_SERVER_DATETIME_FORMAT), date_time)
         })
