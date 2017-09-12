@@ -52,7 +52,7 @@
             <field name="res_model">hr.holidays.year</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="holiday_year_search"/>
+            <field name="search_view_id" ref="holidays_year_search"/>
         </record>
     </data>
 </openerp>
