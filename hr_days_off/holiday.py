@@ -44,10 +44,10 @@ class hr_holidays(osv.osv):
         'notes': fields.text('Reasons',readonly=True, states={'draft':[('readonly',False)]}),
 
         'date_day_from': fields.date(string="Date From"),
-        'date_day_to' = fields.date(string="Date To")
+        'date_day_to': fields.date(string="Date To")
 
-        'day_time_from' = fields.selection([('morning', 'Morning'), ('midday', 'Midday')], string="Day Time From", default='morning')
-        'day_time_to' = fields.selection([('midday', 'Midday'), ('evening', 'Evening')], string="Day Time From", default='evening')
+        'day_time_from': fields.selection([('morning', 'Morning'), ('midday', 'Midday')], string="Day Time From", default='morning')
+        'day_time_to': fields.selection([('midday', 'Midday'), ('evening', 'Evening')], string="Day Time From", default='evening')
     }
 
     def _get_number_of_days(self, cr, uid, date_from, date_to):
