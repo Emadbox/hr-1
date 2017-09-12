@@ -32,11 +32,9 @@ class HrHolidaysYearWizard(models.Model):
 
     @api.one
     def action_apply(self):
-        category_ids = self.env['hr.holidays.period.category'].search([('name', '=', 'Week-End')])
-        if not category_ids:
-            category = self.env['hr.holidays.period.category'].create({'name': 'Week-End'})
-        else:
-            category = category_ids[0]
+        category_obj = self.env['hr.holidays.period.category']
+        category_ids = category_obj.search([('name', '=', 'Week-End')])
+        category = category_ids[0] if category_ids else category_obj.create({'name': 'Week-End'})
 
         try:
             year_start = datetime.strptime('%04s-01-01' % (self.year_id.year), DEFAULT_SERVER_DATE_FORMAT)
@@ -56,7 +54,7 @@ class HrHolidaysYearWizard(models.Model):
                 'date_start' : saturday.strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'date_stop' : (saturday+relativedelta(days=1)).strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'name' : _('Week-End %02d') % (weeknum,),
-                'category_id': category,
+                'category_id': category.id,
             })
 
         return {
