@@ -46,21 +46,23 @@ class HrHolidaysYearWizard(models.Model):
         # NOTE: we use ISO week number, but if the 1st saturday of the
         #       year is before the 1st thursday we force week-num to 0
         year_rule = rrule.rrule(rrule.DAILY, dtstart=year_start, until=year_end, byweekday=(rrule.SA))
+        periods = []
         for saturday in year_rule:
             iso_year, iso_weeknum, iso_weekday = saturday.isocalendar()
             weeknum = iso_year == int(self.year_id.year) and iso_weeknum or 0
-            self.env['hr.holidays.period'].create({
+            period.append(self.env['hr.holidays.period'].create({
                 'year_id' : self.year_id.id,
                 'date_start' : saturday.strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'date_stop' : (saturday+relativedelta(days=1)).strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'name' : _('Week-End %02d') % (weeknum,),
                 'category_id': category.id,
-            })
+            }))
 
         return {
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'hr.holidays.period',
             'type': 'ir.actions.act_window',
+            'domain': ['id', 'in', periods],
             'target': 'current'
         }
