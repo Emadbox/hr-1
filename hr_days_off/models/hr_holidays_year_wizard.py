@@ -56,7 +56,7 @@ class HrHolidaysYearWizard(models.Model):
                 'date_start' : saturday.strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'date_stop' : (saturday+relativedelta(days=1)).strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'name' : _('Week-End %02d') % (weeknum,),
-                'categ': category,
+                'category_id': category,
             })
 
         return {
