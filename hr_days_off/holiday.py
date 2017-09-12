@@ -29,7 +29,6 @@ import openerp.pooler
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-##import openerp.decimal_precision as dp
 import openerp.netsvc
 import openerp.tools
 import math
@@ -38,27 +37,17 @@ class hr_holidays(osv.osv):
     _inherit = "hr.holidays"
     _order = 'id desc'
 
-    def _compute_number_of_days(self, cr, uid, ids, name, args, context=None):
-        result = {}
-        for hol in self.browse(cr, uid, ids, context=context):
-            if hol.type=='remove':
-                result[hol.id] = -hol.number_of_days_temp
-            else:
-                result[hol.id] = hol.number_of_days_temp
-        return result
-
     _columns = {
         'name': fields.char('Description', size=64,readonly=True, states={'draft':[('readonly',False)]}),
         'user_id':fields.related('employee_id', 'user_id', type='many2one', readonly=True, states={'draft':[('readonly',False)]},relation='res.users', string='User', store=True),
-        # 'date_from': fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)]}, select=True),
-        # 'date_to': fields.datetime('End Date', readonly=True, states={'draft':[('readonly',False)]}),
         'holiday_status_id': fields.many2one("hr.holidays.status", "Leave Type", required=True, states={'draft':[('readonly',False)]}),
-        # 'employee_id': fields.many2one('hr.employee', "Employee", select=True, invisible=False, readonly=True, states={'draft':[('readonly',False)]}),
-        # 'manager_id': fields.many2one('hr.employee', 'First Approval', invisible=False, readonly=True, states={'draft':[('readonly',False)]}, help='This area is automatically filled by the user who validate the leave'),
         'notes': fields.text('Reasons',readonly=True, states={'draft':[('readonly',False)]}),
-        # 'number_of_days_temp': fields.float('Allocation', readonly=True, states={'draft':[('readonly',False)]}),
-        # 'number_of_days': fields.function(_compute_number_of_days, string='Number of Days', store=True,readonly=True, states={'draft':[('readonly',False)]}),
-        # 'department_id':fields.related('employee_id', 'department_id', string='Department', type='many2one', relation='hr.department', readonly=True, store=True, states={'draft':[('readonly',False)]}),
+
+        'date_day_from': fields.date(string="Date From"),
+        'date_day_to' = fields.date(string="Date To")
+
+        'day_time_from' = fields.selection([('morning', 'Morning'), ('midday', 'Midday')], string="Day Time From", default='morning')
+        'day_time_to' = fields.selection([('midday', 'Midday'), ('evening', 'Evening')], string="Day Time From", default='evening')
     }
 
     def _get_number_of_days(self, cr, uid, date_from, date_to):
@@ -89,24 +78,78 @@ class hr_holidays(osv.osv):
         return diff_day
 
 
-    def onchange_date(self, cr, uid, ids, date_to, date_from):
-        result = {}
+    def onchange_date(self, cr, uid, ids, date_to, date_from, values = {}):
+        values['number_of_days_temp'] = 0
+
         if date_to and date_from:
             diff_day = self._get_number_of_days(cr, uid,date_from, date_to)
             if not diff_day:
-                warning = {
+                return {
+                    'warning': {
                        'title': _('Configuration Error !'),
                        'message' : _('Please, Can you configure the week-end holidays ?'),
                     }
-                return {'warning': warning}
+                }
 
-            result['value'] = {
-                'number_of_days_temp': math.ceil(diff_day)
-            }
-            return result
-        result['value'] = {
-            'number_of_days_temp': 0,
+            values['number_of_days_temp'] = math.ceil(diff_day)
+
+        return {
+            'value': values
         }
-        return result
+
+    def float_time_convert(float_val):    
+        factor = float_val < 0 and -1 or 1
+        val = abs(float_val)
+        hour = factor * int(math.floor(val))
+        minute = int(round((val % 1) * 60))
+        return format(hour, '02') + ':' + format(minute, '02')
+
+    def get_worktime(self, cr, uid, ids, date):
+        calendar_ids = self.pool.get('resource.calendar').search([('company_id', '=', self.employee_id.company_id.id)])
+
+        worktime = {
+            'morning': 8.5,
+            'midday': 13.5,
+            'evening': 17.5
+        }
+
+        if len(calendar_ids) > 0:
+            for attendance in calendar_ids[0].attendance_ids:
+                if int(attendance.dayofweek) == datetime.strptime(date, DEFAULT_SERVER_DATE_FORMAT).weekday():
+                    worktime['morning'] = attendance.hour_from
+                    worktime['midday'] = (attendance.hour_to + attendance.hour_from) / 2
+                    worktime['evening'] = attendance.hour_to
+                    break
+
+        return worktime
+
+    def to_utc(self, context, date_local):
+        timezone = pytz.timezone(context.get('tz') or 'UTC')
+        return timezone.localize(datetime.strptime(date_local, '%Y-%m-%d %H:%M:%S')).astimezone(pytz.UTC)
+        
+
+    def onchange_date_from_inherit(self, cr, uid, ids, date_to, date_day_from, day_time_from):
+        if date_day_from and day_time_from:
+            worktime = get_worktime(self, cr, uid, ids, date_day_from)
+            time = worktime['midday'] if day_time_from=='midday' else worktime['morning']
+            date_time = to_utc(self, context, date_day_from + ' ' + float_time_convert(time) + ':00')
+        else:
+            date_time = False
+
+        return onchange_date(self, cr, uid, ids, date_to, date_time, {
+            'date_from': date_time
+        })
+
+    def onchange_date_to_inherit(self, cr, uid, ids, date_from, date_day_to, day_time_to):
+        if date_day_to and day_time_to:
+            worktime = get_worktime(self, cr, uid, ids, date_day_to)
+            time = worktime['midday'] if day_time_from=='midday' else worktime['evening']
+            date_time = to_utc(self, context, date_day_to + ' ' + float_time_convert(time) + ':00')
+        else:
+            date_time = False
+
+        return onchange_date(self, cr, uid, ids, date_time, date_from, {
+            'date_to': date_time
+        })
 
 hr_holidays()
