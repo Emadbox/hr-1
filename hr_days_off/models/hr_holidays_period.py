@@ -19,7 +19,7 @@ class HrHolidaysPeriod(models.Model):
     date_start = fields.Date('Start Date', required=True, default=lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT))
     date_stop = fields.Date('Stop Date', required=True, default=lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT))
     category_id = fields.Many2one('hr.holidays.period.category', string="Category")
-    company_ids = field.Many2many('res.company', string="Specific Companies", help="Apply this period only for specific companies (otherwise it is a common period)")
+    company_ids = fields.Many2many('res.company', string="Specific Companies", help="Apply this period only for specific companies (otherwise it is a common period)")
     active = fields.Boolean(default=True)
 
     @api.model
