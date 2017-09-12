@@ -2,8 +2,8 @@
 <openerp>
     <data>
         <record model="ir.ui.view" id="holiday_year_wizard">
-            <field name="name">hr.holiday.year.wizard</field>
-            <field name="model">hr.holiday.year.wizard</field>
+            <field name="name">hr.holidays.year.wizard</field>
+            <field name="model">hr.holidays.year.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Generate Week-End" version="7.0">
@@ -23,7 +23,7 @@
 
         <record model="ir.actions.act_window" id="holiday_year_wizard_act">
             <field name="name">Week-end Generator</field>
-            <field name="res_model">hr.holiday.year.wizard</field>
+            <field name="res_model">hr.holidays.year.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="holiday_year_wizard" />
