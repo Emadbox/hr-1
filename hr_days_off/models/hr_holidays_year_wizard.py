@@ -14,7 +14,7 @@ _logger = logging.getLogger(__name__)
 class HrHolidaysYearWizard(models.Model):
     _name = 'hr.holidays.year.wizard'
     
-    year_id = fields.Many2one('hr.holiday.year', string="Year", required=True)
+    year_id = fields.Many2one('hr.holidays.year', string="Year", required=True)
 
     @api.model
     def _check_fields(self, values):
@@ -51,7 +51,7 @@ class HrHolidaysYearWizard(models.Model):
         for saturday in year_rule:
             iso_year, iso_weeknum, iso_weekday = saturday.isocalendar()
             weeknum = iso_year == int(self.year_id.year) and iso_weeknum or 0
-            self.env['hr.holiday.period'].create({
+            self.env['hr.holidays.period'].create({
                 'year_id' : self.year_id.id,
                 'date_start' : saturday.strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'date_stop' : (saturday+relativedelta(days=1)).strftime(DEFAULT_SERVER_DATE_FORMAT),
@@ -62,7 +62,7 @@ class HrHolidaysYearWizard(models.Model):
         return {
             'view_type': 'form',
             'view_mode': 'tree,form',
-            'res_model': 'hr.holiday.period',
+            'res_model': 'hr.holidays.period',
             'type': 'ir.actions.act_window',
             'target': 'current'
         }
