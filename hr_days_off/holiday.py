@@ -123,32 +123,32 @@ class hr_holidays(osv.osv):
 
         return worktime
 
-    def to_utc(self, context, date_local):
+    def to_utc(context, date_local):
         timezone = pytz.timezone(context.get('tz') or 'UTC')
         return timezone.localize(datetime.strptime(date_local, '%Y-%m-%d %H:%M:%S')).astimezone(pytz.UTC)
         
 
     def onchange_date_from_inherit(self, cr, uid, ids, date_to, date_day_from, day_time_from):
         if date_day_from and day_time_from:
-            worktime = get_worktime(self, cr, uid, ids, date_day_from)
+            worktime = self.get_worktime(cr, uid, ids, date_day_from)
             time = worktime['midday'] if day_time_from=='midday' else worktime['morning']
             date_time = to_utc(self, context, date_day_from + ' ' + float_time_convert(time) + ':00')
         else:
             date_time = False
 
-        return onchange_date(self, cr, uid, ids, date_to, date_time, {
+        return self.onchange_date(cr, uid, ids, date_to, date_time, {
             'date_from': date_time
         })
 
     def onchange_date_to_inherit(self, cr, uid, ids, date_from, date_day_to, day_time_to):
         if date_day_to and day_time_to:
-            worktime = get_worktime(self, cr, uid, ids, date_day_to)
+            worktime = self.get_worktime(cr, uid, ids, date_day_to)
             time = worktime['midday'] if day_time_from=='midday' else worktime['evening']
             date_time = to_utc(self, context, date_day_to + ' ' + float_time_convert(time) + ':00')
         else:
             date_time = False
 
-        return onchange_date(self, cr, uid, ids, date_time, date_from, {
+        return self.onchange_date(cr, uid, ids, date_time, date_from, {
             'date_to': date_time
         })
 
