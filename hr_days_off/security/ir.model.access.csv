@@ -1,7 +1,7 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_training_holiday_manager","training.holiday.year","model_training_holiday_year","base.group_hr_manager",1,1,1,1
-"access_training_holidays_category","training.holidays.category","model_training_holidays_category","base.group_hr_manager",1,1,1,1
-"access_training_holiday_period","training.holiday.period","model_training_holiday_period","base.group_hr_manager",1,1,1,1
-"access_training_holiday_year_wizard","training.holiday.year.wizard","model_training_holiday_year_wizard","base.group_hr_manager",1,1,1,1
-"access_training_holiday_user_year","training.holiday.year","model_training_holiday_year","base.group_user",1,0,0,0
-"access_training_holiday_user","training.holiday.period","model_training_holiday_period","base.group_user",1,0,0,0
+"access_hr_holidays_manager","hr.holidays.year","model_hr_holidays_year","base.group_hr_manager",1,1,1,1
+"access_hr_holidays_period_category","hr.holidays.period.category","model_hr_holidays_period_category","base.group_hr_manager",1,1,1,1
+"access_hr_holidays_period","hr.holidays.period","model_hr_holidays_period","base.group_hr_manager",1,1,1,1
+"access_hr_holidays_year_wizard","hr.holidays.year.wizard","model_hr_holidays_year_wizard","base.group_hr_manager",1,1,1,1
+"access_hr_holidays_user_year","hr.holidays.year","model_hr_holidays_year","base.group_user",1,0,0,0
+"access_hr_holidays_user","hr.holidays.period","model_hr_holidays_period","base.group_user",1,0,0,0
