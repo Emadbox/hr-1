@@ -21,7 +21,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="holiday_year_wizard_act">
+        <record model="ir.actions.act_window" id="holidays_year_wizard_act">
             <field name="name">Week-end Generator</field>
             <field name="res_model">hr.holidays.year.wizard</field>
             <field name="view_type">form</field>
