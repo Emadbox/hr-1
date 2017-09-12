@@ -100,7 +100,7 @@ class HrHolidays(models.Model):
         if self.date_day_from and self.day_time_from:
             worktime = self.get_worktime(self.date_day_from)
             time = worktime['midday'] if self.day_time_from=='midday' else worktime['morning']
-            date_time = to_utc(self, self.date_day_from + ' ' + float_time_convert(time) + ':00')
+            date_time = self.to_utc(self.date_day_from + ' ' + float_time_convert(time) + ':00')
         else:
             date_time = False
 
@@ -115,7 +115,7 @@ class HrHolidays(models.Model):
         if self.date_day_to and self.day_time_to:
             worktime = self.get_worktime(self.date_day_to)
             time = worktime['midday'] if self.day_time_to=='midday' else worktime['evening']
-            date_time = to_utc(self, self.date_day_to + ' ' + float_time_convert(time) + ':00')
+            date_time = self.to_utc(self.date_day_to + ' ' + float_time_convert(time) + ':00')
         else:
             date_time = False
 
