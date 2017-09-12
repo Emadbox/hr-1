@@ -15,7 +15,7 @@ class HrHolidaysPeriod(models.Model):
     _name = 'hr.holidays.period'
     
     name = fields.Char('Name', required=True)
-    year_id = fields.Many2one('hr.holiday.year', string="Year", required=True, ondelete='cascade')
+    year_id = fields.Many2one('hr.holidays.year', string="Year", required=True, ondelete='cascade')
     date_start = fields.Date('Start Date', required=True, default=lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT))
     date_stop = fields.Date('Stop Date', required=True, default=lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT))
     category_id = fields.Many2one('hr.holidays.period.category', string="Category")
