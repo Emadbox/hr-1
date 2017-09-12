@@ -50,7 +50,7 @@ class HrHolidaysYearWizard(models.Model):
         for saturday in year_rule:
             iso_year, iso_weeknum, iso_weekday = saturday.isocalendar()
             weeknum = iso_year == int(self.year_id.year) and iso_weeknum or 0
-            period.append(self.env['hr.holidays.period'].create({
+            periods.append(self.env['hr.holidays.period'].create({
                 'year_id' : self.year_id.id,
                 'date_start' : saturday.strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'date_stop' : (saturday+relativedelta(days=1)).strftime(DEFAULT_SERVER_DATE_FORMAT),
