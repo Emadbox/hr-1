@@ -26,7 +26,7 @@ class HrHolidays(models.Model):
     day_time_from = fields.Selection([
         ('morning', 'Morning'),
         ('midday', 'Midday')
-    ], string="Day Time From", default='morning'),
+    ], string="Day Time From", default='morning')
     day_time_to = fields.Selection([
         ('midday', 'Midday'),
         ('evening', 'Evening')
