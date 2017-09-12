@@ -20,8 +20,8 @@ class HrHolidays(models.Model):
     holiday_status_id = fields.Many2one(states={'draft':[('readonly',False)]}),
     notes = fields.Text(states={'draft':[('readonly',False)]}),
 
-    date_day_from = fields.Date(string="Date From", lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT)),
-    date_day_to = fields.Date(string="Date To", lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT)),
+    date_day_from = fields.Date(string="Date From", default=lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT)),
+    date_day_to = fields.Date(string="Date To", default=lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT)),
 
     day_time_from = fields.Selection([
         ('morning', 'Morning'),
