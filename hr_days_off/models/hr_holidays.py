@@ -34,9 +34,9 @@ class HrHolidays(models.Model):
     ], string="Day Time From", default='evening')
 
     @api.model
-    def _compute_holiday_duration(self, date_from, date_to):
+    def _compute_holidays_duration(self, date_from, date_to):
         year_now = time.strftime('%Y')
-        if not self.env['training.holiday.year'].search([('year', '=', year_now)]):
+        if not self.env['hr.holidays.year'].search([('year', '=', year_now)]):
             raise exceptions.ValidationError(_('The days off are not configured for this year(') + year_now + ')')
             return False
 
@@ -47,7 +47,7 @@ class HrHolidays(models.Model):
         date_iterator = date_from
         days_off_count = 0
         while date_iterator < date_to:
-            if self.env['training.holiday.period'].search([
+            if self.env['hr.holidays.period'].search([
                 '&',
                     '|',
                         ('company_ids', '=', False),
@@ -59,9 +59,9 @@ class HrHolidays(models.Model):
 
             date_iterator += relativedelta(days=1)
 
-        holiday_duration = date_to - date_from
-        holiday_duration_in_days = holiday_duration.days + float(holiday_duration.seconds) / (24 * 60 * 60)
-        return math.ceil(holiday_duration_in_days - days_off_count)
+        holidays_duration = date_to - date_from
+        holidays_duration_in_days = holidays_duration.days + float(holidays_duration.seconds) / (24 * 60 * 60)
+        return math.ceil(holidays_duration_in_days - days_off_count)
 
     @api.model
     def float_time_convert(self, float_val):    
@@ -108,7 +108,7 @@ class HrHolidays(models.Model):
 
         self.update({
             'date_from': date_time,
-            'number_of_days_temp': self._compute_holiday_duration(date_time, self.date_to)
+            'number_of_days_temp': self._compute_holidays_duration(date_time, self.date_to)
         })
 
     @api.one
@@ -123,5 +123,5 @@ class HrHolidays(models.Model):
 
         self.update({
             'date_to': date_time,
-            'number_of_days_temp': self._compute_holiday_duration(self.date_from, date_time)
+            'number_of_days_temp': self._compute_holidays_duration(self.date_from, date_time)
         })
