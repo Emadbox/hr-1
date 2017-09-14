@@ -22,7 +22,11 @@
     'category': 'Human Resources',
     'version': '9.0.1.0',
 
-    'depends': ['hr'],
+    'depends': [
+        'hr',
+        'hr_holidays',
+        'hr_official_days_off'
+    ],
 
     'data': [
         'views/hr_holidays_status.xml',
