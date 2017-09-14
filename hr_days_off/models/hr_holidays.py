@@ -90,23 +90,26 @@ class HrHolidays(models.Model):
         return worktime
 
     @api.model
-    def to_utc(self, date_local):
-        timezone = pytz.timezone(self._context.get('tz') or 'UTC')
-        return timezone.localize(datetime.strptime(date_local, DEFAULT_SERVER_DATETIME_FORMAT)).astimezone(pytz.UTC)
-        
+    def to_datetime(self, date_local_str, timezone_str='UTC'):
+        date = datetime.strptime(date_local_str, DEFAULT_SERVER_DATETIME_FORMAT)
+        if(timezone_str != 'UTC'):
+            timezone = pytz.timezone(timezone_str)
+            date = timezone.localize(timezone).astimezone(pytz.UTC)
+        return date
+
     @api.one
     @api.onchange('date_day_from', 'day_time_from')
     def onchange_date_from_inherit(self):
         if self.date_day_from and self.day_time_from:
             worktime = self.get_worktime(self.date_day_from)
             time = worktime['midday'] if self.day_time_from=='midday' else worktime['morning']
-            date_time = self.to_utc(self.date_day_from + ' ' + self.float_time_convert(time) + ':00')
+            date_time = self.to_datetime(self.date_day_from + ' ' + self.float_time_convert(time) + ':00', self._context.get('tz'))
         else:
             date_time = False
 
         self.update({
             'date_from': date_time,
-            'number_of_days_temp': self._compute_holidays_duration(date_time, datetime.strptime(self.date_to, DEFAULT_SERVER_DATETIME_FORMAT))
+            'number_of_days_temp': self._compute_holidays_duration(date_time, self.to_datetime(self.date_to))
         })
 
     @api.one
@@ -115,11 +118,11 @@ class HrHolidays(models.Model):
         if self.date_day_to and self.day_time_to:
             worktime = self.get_worktime(self.date_day_to)
             time = worktime['midday'] if self.day_time_to=='midday' else worktime['evening']
-            date_time = self.to_utc(self.date_day_to + ' ' + self.float_time_convert(time) + ':00')
+            date_time = self.to_datetime(self.date_day_to + ' ' + self.float_time_convert(time) + ':00', self._context.get('tz'))
         else:
             date_time = False
 
         self.update({
             'date_to': date_time,
-            'number_of_days_temp': self._compute_holidays_duration(datetime.strptime(self.date_from, DEFAULT_SERVER_DATETIME_FORMAT), date_time)
+            'number_of_days_temp': self._compute_holidays_duration(self.to_datetime(self.date_to), date_time)
         })
