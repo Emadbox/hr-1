@@ -18,7 +18,11 @@
     'category': 'Leaves',
     'version': '9.0.1.0',
 
-    'depends': ['base','hr','hr_holidays'],
+    'depends': [
+        'base',
+        'hr',
+        'hr_holidays'
+    ],
     
     'data': [
         'views/hr_holidays.xml',
