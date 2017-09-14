@@ -131,7 +131,7 @@ class HrHolidays(models.Model):
             self.date_from = False
             self.number_of_days_temp = 0
 
-        super(HrHolidays, self)._compute_number_of_days()
+        super(HrHolidays, self)._compute_number_of_days(None, None)
 
     @api.one
     @api.onchange('date_day_to', 'day_time_to')
@@ -145,4 +145,4 @@ class HrHolidays(models.Model):
             self.date_to = False
             self.number_of_days_temp = 0
 
-        super(HrHolidays, self)._compute_number_of_days()
+        super(HrHolidays, self)._compute_number_of_days(None, None)
