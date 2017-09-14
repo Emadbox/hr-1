@@ -119,6 +119,8 @@ class HrHolidays(models.Model):
 
         return worktime
 
+    _
+
     @api.one
     @api.onchange('date_day_from', 'day_time_from')
     def onchange_date_from_inherit(self):
@@ -131,7 +133,7 @@ class HrHolidays(models.Model):
             self.date_from = False
             self.number_of_days_temp = 0
 
-        super(HrHolidays, self)._compute_number_of_days(None, None)
+        self.number_of_days = -self.number_of_days_temp if self.type=='remove' else self.number_of_days_temp
 
     @api.one
     @api.onchange('date_day_to', 'day_time_to')
@@ -145,4 +147,4 @@ class HrHolidays(models.Model):
             self.date_to = False
             self.number_of_days_temp = 0
 
-        super(HrHolidays, self)._compute_number_of_days(None, None)
+        self.number_of_days = -self.number_of_days_temp if self.type=='remove' else self.number_of_days_temp
