@@ -41,14 +41,24 @@ class HrHolidays(models.Model):
 
         return True
 
+    def _add_needed_fields(self, values):
+        if values.get('date_day_from') or values.get('day_time_from') or values.get('date_day_to') or values.get('day_time_to'):
+            values['date_from'] = self.date_from
+            values['date_to'] = self.date_to
+            values['number_of_days_temp'] = self.number_of_days_temp
+
+        return values
+
     @api.model
     def create(self, values):
+        values = self._add_needed_fields(values)
         if self._check_fields(values):
             return super(HrHolidays, self).create(values)
         return False
 
     @api.one
     def write(self, values):
+        values = self._add_needed_fields(values)
         if self._check_fields(values):
             return super(HrHolidays, self).write(values)
         return False
