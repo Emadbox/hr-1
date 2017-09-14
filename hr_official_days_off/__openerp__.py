@@ -1,13 +1,18 @@
 # -*- encoding: utf-8 -*-
 {
-    'name': 'Holidays Days Off',
+    'name': 'Holidays Official Days Off',
     
     'description': """
-This module creates the non working days in OpenERP using a generator(for the week-end) or manually.
-It's use to improve the holidays requests by taking into account the bank holidays.""",
+        Holidays Official Days Off
+
+        This module creates the non working days in Odoo using a generator(for the week-end) or manually.
+        It's uses to improve the holidays requests by ignoring official blank holidays.
+
+        This module has been developed by Jason PINDAT @ AbAKUS it-solutions.
+    """,
     'images': ['images/leave.png','images/periods.png'],
 
-    'author': 'Jason PINDAT, AbAKUS it-solutions SARL',
+    'author': 'Jason Pindat, AbAKUS it-solutions SARL',
     'website': "http://www.abakusitsolutions.eu",
 
     'category': 'Leaves',
