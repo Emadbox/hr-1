@@ -52,14 +52,14 @@ class HrHolidays(models.Model):
             if date_day_from and day_time_from:
                 worktime = self.get_worktime(date_day_from, values)
                 time = worktime['midday'] if day_time_from=='midday' else worktime['morning']
-                values['date_from'] = self.to_datetime(date_day_from + ' ' + self.float_time_convert(time) + ':00', self._context.get('tz'))
+                values['date_from'] = self.to_datetime(date_day_from + ' ' + self.float_time_convert(time) + ':00', self._context.get('tz')).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             else:
                 values['date_from'] = False
 
             if date_day_to and day_time_to:
                 worktime = self.get_worktime(date_day_to, values)
                 time = worktime['midday'] if day_time_to=='midday' else worktime['evening']
-                values['date_to'] = self.to_datetime(date_day_to + ' ' + self.float_time_convert(time) + ':00', self._context.get('tz'))
+                values['date_to'] = self.to_datetime(date_day_to + ' ' + self.float_time_convert(time) + ':00', self._context.get('tz')).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             else:
                 values['date_to'] = False
 
