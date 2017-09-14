@@ -15,9 +15,6 @@ _logger = logging.getLogger(__name__)
 class HrHolidays(models.Model):
     _inherit = "hr.holidays"
     _order = 'id desc'
-    _sql_constraints = [
-        ('date_check3', "CHECK (date_from < date_to)", "The start date must be anterior to the end date."),
-    ]
 
     date_day_from = fields.Date(string="Date From", default=lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT))
     date_day_to = fields.Date(string="Date To", default=lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT))
@@ -30,6 +27,29 @@ class HrHolidays(models.Model):
         ('midday', 'Midday'),
         ('evening', 'Evening')
     ], string="Day Time From", default='evening')
+
+    def _check_fields(self, values):
+
+        date_from = values.get('date_from', self.date_from)
+        date_to = values.get('date_to', self.date_to)
+
+        if date_from >= date_to:
+            raise exceptions.ValidationError(_('End date must be greater to start date.'))
+            return False
+
+        return True
+
+    @api.model
+    def create(self, values):
+        if self._check_fields(values):
+            return super(HrHolidays, self).create(values)
+        return False
+
+    @api.one
+    def write(self, values):
+        if self._check_fields(values):
+            return super(HrHolidays, self).write(values)
+        return False
 
     @api.model
     def to_datetime(self, date_local_str, timezone_str='UTC'):
