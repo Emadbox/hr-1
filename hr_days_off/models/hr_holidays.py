@@ -63,7 +63,7 @@ class HrHolidays(models.Model):
                     ('date_stop', '>=', date_iterator)
             ]):
                 days_holidays_count += 1
-                
+
                 if (str(date_iterator.date()) == self.date_day_from and self.day_time_from == 'midday'):
                     days_holidays_count -= 0.5
                 if (str(date_iterator.date()) == self.date_day_to and self.day_time_to == 'midday'):
@@ -112,10 +112,11 @@ class HrHolidays(models.Model):
             worktime = self.get_worktime(self.date_day_from)
             time = worktime['midday'] if self.day_time_from=='midday' else worktime['morning']
             self.date_from = self.to_datetime(self.date_day_from + ' ' + self.float_time_convert(time) + ':00', self._context.get('tz'))
+            self.number_of_days_temp = self._compute_holidays_duration()
         else:
             self.date_from = False
-
-        self.number_of_days_temp = self._compute_holidays_duration()
+            self.number_of_days_temp = False
+        
 
     @api.one
     @api.onchange('date_day_to', 'day_time_to')
@@ -124,7 +125,7 @@ class HrHolidays(models.Model):
             worktime = self.get_worktime(self.date_day_to)
             time = worktime['midday'] if self.day_time_to=='midday' else worktime['evening']
             self.date_to = self.to_datetime(self.date_day_to + ' ' + self.float_time_convert(time) + ':00', self._context.get('tz'))
+            self.number_of_days_temp = self._compute_holidays_duration()
         else:
             self.date_to = False
-
-        self.number_of_days_temp = self._compute_holidays_duration()
+            self.number_of_days_temp = False
