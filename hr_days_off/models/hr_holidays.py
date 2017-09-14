@@ -33,11 +33,11 @@ class HrHolidays(models.Model):
         date_from = values.get('date_from', self.date_from)
         date_to = values.get('date_to', self.date_to)
 
+        _logger.info('\n\n'+str(values)+'\n\n')
+
         if date_from >= date_to:
             raise exceptions.ValidationError(_('End date must be greater to start date.'))
             return False
-
-        _logger.info('\n\n'+str(values)+'\n\n')
 
         return True
 
