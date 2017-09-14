@@ -43,9 +43,30 @@ class HrHolidays(models.Model):
 
     def _add_needed_fields(self, values):
         if values.get('date_day_from') or values.get('day_time_from') or values.get('date_day_to') or values.get('day_time_to'):
-            values['date_from'] = self.date_from
-            values['date_to'] = self.date_to
-            values['number_of_days_temp'] = self.number_of_days_temp
+
+            date_day_from = values.get('date_day_from', self.date_day_from)
+            day_time_from = values.get('day_time_from', self.day_time_from)
+            date_day_to = values.get('date_day_to', self.date_day_to)
+            day_time_to = values.get('day_time_to', self.day_time_to)
+
+            if date_day_from and day_time_from:
+                worktime = self.get_worktime(date_day_from, values)
+                time = worktime['midday'] if day_time_from=='midday' else worktime['morning']
+                values['date_from'] = self.to_datetime(date_day_from + ' ' + self.float_time_convert(time) + ':00', self._context.get('tz'))
+            else:
+                values['date_from'] = False
+
+            if date_day_to and day_time_to:
+                worktime = self.get_worktime(date_day_to, values)
+                time = worktime['midday'] if day_time_to=='midday' else worktime['evening']
+                values['date_to'] = self.to_datetime(date_day_to + ' ' + self.float_time_convert(time) + ':00', self._context.get('tz'))
+            else:
+                values['date_to'] = False
+
+            if values.get('date_from') and values.get('date_to'):
+                values['number_of_days_temp'] = self._compute_holidays_duration(values)
+            else:
+                values['number_of_days_temp'] = 0
 
         return values
 
@@ -70,7 +91,7 @@ class HrHolidays(models.Model):
         return timezone.localize(date).astimezone(pytz.UTC)
 
     @api.model
-    def _compute_holidays_duration(self):
+    def _compute_holidays_duration(self, values = {}):
         year_now = time.strftime('%Y')
         if not self.env['hr.holidays.year'].search([('year', '=', year_now)]):
             raise exceptions.ValidationError(_('The days off are not configured for this year(') + year_now + ')')
@@ -78,8 +99,15 @@ class HrHolidays(models.Model):
 
         user_company = self.env.user.company_id
 
-        date_from = self.to_datetime(self.date_from)
-        date_to = self.to_datetime(self.date_to)
+        date_from = values.get('date_from', self.date_from)
+        date_to = values.get('date_to', self.date_to)
+        date_day_from = values.get('date_day_from', self.date_day_from)
+        day_time_from = values.get('day_time_from', self.day_time_from)
+        date_day_to = values.get('date_day_to', self.date_day_to)
+        day_time_to = values.get('day_time_to', self.day_time_to)
+
+        date_from = self.to_datetime(date_from)
+        date_to = self.to_datetime(date_to)
 
         date_iterator = date_from
         days_holidays_count = 0
@@ -94,9 +122,9 @@ class HrHolidays(models.Model):
             ]):
                 days_holidays_count += 1
 
-                if (str(date_iterator.date()) == self.date_day_from and self.day_time_from == 'midday'):
+                if (str(date_iterator.date()) == date_day_from and day_time_from == 'midday'):
                     days_holidays_count -= 0.5
-                if (str(date_iterator.date()) == self.date_day_to and self.day_time_to == 'midday'):
+                if (str(date_iterator.date()) == date_day_to and day_time_to == 'midday'):
                     days_holidays_count -= 0.5
 
             date_iterator += relativedelta(days=1)
@@ -112,8 +140,11 @@ class HrHolidays(models.Model):
         return format(hour, '02') + ':' + format(minute, '02')
 
     @api.model
-    def get_worktime(self, date):
-        calendar_ids = self.env['resource.calendar'].search([('company_id', '=', self.employee_id.company_id.id)])
+    def get_worktime(self, date, values = {}):
+
+        employee_id = self.env['hr.employee'].search([('id', '=', values['employee_id'])]) if values.get('employee_id') else self.employee_id
+
+        calendar_ids = self.env['resource.calendar'].search([('company_id', '=', employee_id.company_id.id)])
 
         worktime = {
             'morning': 8.5,
@@ -143,8 +174,6 @@ class HrHolidays(models.Model):
             self.date_from = False
             self.number_of_days_temp = 0
 
-        self.number_of_days = -self.number_of_days_temp if self.type=='remove' else self.number_of_days_temp
-
     @api.one
     @api.onchange('date_day_to', 'day_time_to')
     def onchange_date_to_inherit(self):
@@ -156,5 +185,3 @@ class HrHolidays(models.Model):
         else:
             self.date_to = False
             self.number_of_days_temp = 0
-
-        self.number_of_days = -self.number_of_days_temp if self.type=='remove' else self.number_of_days_temp
