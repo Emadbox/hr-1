@@ -61,8 +61,8 @@ class HrHolidaysYearWizard(models.Model):
         return {
             'view_type': 'form',
             'view_mode': 'tree,form',
-            'res_model': 'hr.holidays.period',
+            'res_model': 'hr.holidays.year',
             'type': 'ir.actions.act_window',
-            'domain': ['id', 'in', periods],
+            'res_id': self.year_id.id,
             'target': 'current'
         }
