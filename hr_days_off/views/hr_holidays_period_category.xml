@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+       <record model="ir.ui.view" id="holidays_period_category_tree">
+            <field name="name">hr.holidays.period.category.tree</field>
+            <field name="model">hr.holidays.period.category</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Holiday Period Categories">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="holidays_period_category_form">
+            <field name="name">hr.holidays.period.category.form</field>
+            <field name="model">hr.holidays.period.category</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Holiday Period Category" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="holidays_period_category_all_act">
+            <field name="name">Holiday Period Categories</field>
+            <field name="res_model">hr.holidays.period.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+        </record>
+    </data>
+</openerp>
