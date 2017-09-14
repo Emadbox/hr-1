@@ -16,11 +16,6 @@ class HrHolidays(models.Model):
     _inherit = "hr.holidays"
     _order = 'id desc'
 
-    name = fields.Char(readonly=True, states={'draft':[('readonly',False)]})
-    user_id = fields.Many2one(readonly=True, states={'draft':[('readonly',False)]})
-    holiday_status_id = fields.Many2one(states={'draft':[('readonly',False)]})
-    notes = fields.Text(states={'draft':[('readonly',False)]})
-
     date_day_from = fields.Date(string="Date From", default=lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT))
     date_day_to = fields.Date(string="Date To", default=lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT))
 
