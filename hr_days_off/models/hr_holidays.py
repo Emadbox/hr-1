@@ -119,8 +119,6 @@ class HrHolidays(models.Model):
 
         return worktime
 
-    _
-
     @api.one
     @api.onchange('date_day_from', 'day_time_from')
     def onchange_date_from_inherit(self):
