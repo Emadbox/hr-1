@@ -62,11 +62,12 @@ class HrHolidays(models.Model):
                     ('date_start', '<=', date_iterator),
                     ('date_stop', '>=', date_iterator)
             ]):
-                _logger.info('\n\n'+str(date_iterator.date())+' '+str(self.date_day_from)+'\n\n')
-                if (str(date_iterator.date()) == self.date_day_from and self.day_time_from == 'midday') or (str(date_iterator.date()) == self.date_day_to and self.day_time_to == 'midday'):
-                    days_holidays_count += 0.5
-                else:
-                    days_holidays_count += 1
+                days_holidays_count += 1
+                
+                if (str(date_iterator.date()) == self.date_day_from and self.day_time_from == 'midday'):
+                    days_holidays_count -= 0.5
+                if (str(date_iterator.date()) == self.date_day_to and self.day_time_to == 'midday'):
+                    days_holidays_count -= 0.5
 
             date_iterator += relativedelta(days=1)
 
