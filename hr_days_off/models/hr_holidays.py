@@ -37,6 +37,8 @@ class HrHolidays(models.Model):
             raise exceptions.ValidationError(_('End date must be greater to start date.'))
             return False
 
+        _logger.info('\n\n'+str(values)+'\n\n')
+
         return True
 
     @api.model
