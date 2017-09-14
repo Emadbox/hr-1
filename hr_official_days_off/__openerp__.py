@@ -5,7 +5,7 @@
     'description': """
         Holidays Official Days Off
 
-        This module creates the non working days in Odoo using a generator(for the week-end) or manually.
+        This module creates the non working days in Odoo using a generator (for the week-end) or manually.
         It's uses to improve the holidays requests by ignoring official blank holidays.
 
         This module has been developed by Jason PINDAT @ AbAKUS it-solutions.
