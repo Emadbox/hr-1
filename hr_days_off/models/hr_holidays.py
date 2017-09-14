@@ -92,10 +92,8 @@ class HrHolidays(models.Model):
     @api.model
     def to_datetime(self, date_local_str, timezone_str='UTC'):
         date = datetime.strptime(date_local_str, DEFAULT_SERVER_DATETIME_FORMAT)
-        if(timezone_str != 'UTC'):
-            timezone = pytz.timezone(timezone_str)
-            date = timezone.localize(date).astimezone(pytz.UTC)
-        return date
+        timezone = pytz.timezone(timezone_str)
+        return timezone.localize(date).astimezone(pytz.UTC)
 
     @api.one
     @api.onchange('date_day_from', 'day_time_from')
