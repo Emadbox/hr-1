@@ -73,10 +73,6 @@ class HrHolidays(models.Model):
 
         return days_holidays_count
 
-        # holidays_duration = date_to - date_from
-        # holidays_duration_in_days = holidays_duration.days + float(holidays_duration.seconds) / (24 * 60 * 60)
-        # return math.ceil(holidays_duration_in_days - days_off_count)
-
     @api.model
     def float_time_convert(self, float_val):    
         factor = float_val < 0 and -1 or 1
@@ -112,7 +108,7 @@ class HrHolidays(models.Model):
             worktime = self.get_worktime(self.date_day_from)
             time = worktime['midday'] if self.day_time_from=='midday' else worktime['morning']
             self.date_from = self.to_datetime(self.date_day_from + ' ' + self.float_time_convert(time) + ':00', self._context.get('tz'))
-            self.number_of_days_temp = self._compute_holidays_duration()
+            self.number_of_days_temp = self._compute_holidays_duration() if self.date_to else False
         else:
             self.date_from = False
             self.number_of_days_temp = False
@@ -125,7 +121,7 @@ class HrHolidays(models.Model):
             worktime = self.get_worktime(self.date_day_to)
             time = worktime['midday'] if self.day_time_to=='midday' else worktime['evening']
             self.date_to = self.to_datetime(self.date_day_to + ' ' + self.float_time_convert(time) + ':00', self._context.get('tz'))
-            self.number_of_days_temp = self._compute_holidays_duration()
+            self.number_of_days_temp = self._compute_holidays_duration() if self.date_from else False
         else:
             self.date_to = False
             self.number_of_days_temp = False
