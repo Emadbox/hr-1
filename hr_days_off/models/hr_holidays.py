@@ -129,7 +129,9 @@ class HrHolidays(models.Model):
             self.number_of_days_temp = self._compute_holidays_duration() if self.date_to else False
         else:
             self.date_from = False
-            self.number_of_days_temp = False
+            self.number_of_days_temp = 0
+
+        self._compute_number_of_days()
         
 
     @api.one
@@ -142,4 +144,6 @@ class HrHolidays(models.Model):
             self.number_of_days_temp = self._compute_holidays_duration() if self.date_from else False
         else:
             self.date_to = False
-            self.number_of_days_temp = False
+            self.number_of_days_temp = 0
+
+        self._compute_number_of_days()
