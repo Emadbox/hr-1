@@ -15,8 +15,7 @@
                 </xpath>
 
                 <xpath expr="//field[@name='number_of_days_temp']" position="attributes">
-                    <attribute name="readonly">1</attribute>
-                    <!-- <attribute name="class">oe_inline oe_read_only</attribute> -->
+                    <!-- <attribute name="readonly">1</attribute> -->
                 </xpath>
 
                 <xpath expr="//field[@name='date_from']" position="after">
