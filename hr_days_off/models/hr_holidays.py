@@ -15,6 +15,9 @@ _logger = logging.getLogger(__name__)
 class HrHolidays(models.Model):
     _inherit = "hr.holidays"
     _order = 'id desc'
+    _sql_constraints = [
+        ('date_check3', "CHECK (date_from < date_to)", "The start date must be anterior to the end date."),
+    ]
 
     date_day_from = fields.Date(string="Date From", default=lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT))
     date_day_to = fields.Date(string="Date To", default=lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT))
