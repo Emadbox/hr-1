@@ -15,7 +15,7 @@
                 </xpath>
 
                 <xpath expr="//field[@name='number_of_days_temp']" position="attributes">
-                    <attribute name="readonly">1</attribute>
+                    <attribute name="attrs">{'readonly': [('type', '=', 'remove')]}</attribute>
                 </xpath>
 
                 <xpath expr="//field[@name='date_from']" position="after">
