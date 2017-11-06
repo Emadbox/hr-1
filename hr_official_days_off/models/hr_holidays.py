@@ -29,55 +29,69 @@ class HrHolidays(models.Model):
     ], string="Day Time From", default='evening')
 
     def _check_fields(self, values):
+        # Do these computation when 'removing' holidays
+        if values.get('date_from', self.date_from) == 'remove':
+            date_from = values.get('date_from', self.date_from)
+            date_to = values.get('date_to', self.date_to)
 
-        date_from = values.get('date_from', self.date_from)
-        date_to = values.get('date_to', self.date_to)
-
-        if date_from >= date_to:
-            raise exceptions.ValidationError(_('End date must be greater to start date.'))
-            return False
+            if date_from >= date_to:
+                raise exceptions.ValidationError(_('End date must be greater to start date.'))
+                return False
 
         return True
 
     def _add_needed_fields(self, values):
-        if values.get('date_day_from') or values.get('day_time_from') or values.get('date_day_to') or values.get('day_time_to'):
+        if values.get('type') and values.get('type') == 'remove':
+            if values.get('date_day_from') or values.get('day_time_from') or values.get('date_day_to') or values.get('day_time_to'):
 
-            date_day_from = values.get('date_day_from', self.date_day_from)
-            day_time_from = values.get('day_time_from', self.day_time_from)
-            date_day_to = values.get('date_day_to', self.date_day_to)
-            day_time_to = values.get('day_time_to', self.day_time_to)
+                date_day_from = values.get('date_day_from', self.date_day_from)
+                day_time_from = values.get('day_time_from', self.day_time_from)
+                date_day_to = values.get('date_day_to', self.date_day_to)
+                day_time_to = values.get('day_time_to', self.day_time_to)
 
-            if date_day_from and day_time_from:
-                worktime = self.get_worktime(date_day_from, values)
-                if day_time_from == 'midday':
-                    time = worktime['midday'] + 0.5
+                if date_day_from and day_time_from:
+                    worktime = self.get_worktime(date_day_from, values)
+                    if day_time_from == 'midday':
+                        time = worktime['midday'] + 0.5
+                    else:
+                        time = worktime['morning']
+                    #time = worktime['midday'] if day_time_from=='midday' else worktime['morning']
+                    values['date_from'] = self.to_datetime(date_day_from + ' ' + self.float_time_convert(time) + ':00', self._context.get('tz')).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                 else:
-                    time = worktime['morning']
-                #time = worktime['midday'] if day_time_from=='midday' else worktime['morning']
-                values['date_from'] = self.to_datetime(date_day_from + ' ' + self.float_time_convert(time) + ':00', self._context.get('tz')).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-            else:
-                values['date_from'] = False
+                    values['date_from'] = False
 
-            if date_day_to and day_time_to:
-                worktime = self.get_worktime(date_day_to, values)
-                if day_time_to == 'midday':
-                    time = worktime['midday'] - 1
+                if date_day_to and day_time_to:
+                    worktime = self.get_worktime(date_day_to, values)
+                    if day_time_to == 'midday':
+                        time = worktime['midday'] - 1
+                    else:
+                        time = worktime['evening']
+                    #time = worktime['midday'] if day_time_to=='midday' else worktime['evening']
+                    values['date_to'] = self.to_datetime(date_day_to + ' ' + self.float_time_convert(time) + ':00', self._context.get('tz')).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                 else:
-                    time = worktime['evening']
-                #time = worktime['midday'] if day_time_to=='midday' else worktime['evening']
-                values['date_to'] = self.to_datetime(date_day_to + ' ' + self.float_time_convert(time) + ':00', self._context.get('tz')).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-            else:
-                values['date_to'] = False
+                    values['date_to'] = False
 
-            if values.get('date_from') and values.get('date_to'):
-                values['number_of_days_temp'] = self._compute_holidays_duration(values)
-            else:
-                values['number_of_days_temp'] = 0
+                if values.get('date_from') and values.get('date_to'):
+                    values['number_of_days_temp'] = self._compute_holidays_duration(values)
+                else:
+                    values['number_of_days_temp'] = 0
 
         return values
 
     @api.model
+    def _removeDatesForAllocation(self, values):
+        if values.get('type') and values.get('type') == 'add':
+            values['date_from'] = False
+            values['date_to'] = False
+            values['date_day_from'] = False
+            values['date_day_to'] = False
+            values['day_time_from'] = 'morning'
+            values['day_time_to'] = 'evening'
+        return values
+
+    @api.model
     def create(self, values):
+        values = self._removeDatesForAllocation(values)
         values = self._add_needed_fields(values)
         if self._check_fields(values):
             return super(HrHolidays, self).create(values)
@@ -85,6 +99,7 @@ class HrHolidays(models.Model):
 
     @api.one
     def write(self, values):
+        values = self._removeDatesForAllocation(values)
         values = self._add_needed_fields(values)
         if self._check_fields(values):
             return super(HrHolidays, self).write(values)
