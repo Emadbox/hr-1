@@ -8,9 +8,7 @@ from odoo import (
 from zipfile import ZipFile
 from urllib.parse import urlencode, quote_plus
 import base64
-import logging
 import tempfile
-import pprint
 
 
 class hr_expense_attachments_download(models.Model):
@@ -40,28 +38,25 @@ class hr_expense_attachments_download(models.Model):
             )
             base_folder_name = "{}{}".format(prefix, body)
             folder_name = base_folder_name
-            _logger.info("PNT - Base folder name:{}".format(folder_name))
             counter = 1
             while folder_name in existing_folders:
                 counter += 1
                 folder_name = base_folder_name + " - " + str(counter)
-                _logger.info("PNT - folder name:{}".format(folder_name))
 
             existing_folders[folder_name] = True
             attachment_data = self.env['ir.attachment'].search(
                 [('res_model', '=', 'hr.expense'), ('res_id', '=', line.id)]
             )
-            _logger.info("PNT - attachment:{}".format(pprint.pformat(attachment_data, indent=4)))
             for f in attachment_data:
-                _logger.info("PNT - data:{}".format(f.datas_fname))
                 fn = open(temp_file,  'wb')
                 fn.write(base64.b64decode(f.datas))
-                # fn.write(f.datas)
                 fn.close()
                 zip_file_object.write(temp_file, folder_name+"/"+f.name)
 
     """
     button action 
+    python 2.7 allows self.export_file = base64.encodestrings(fn.read()) to be called.
+    python 3.x prefers self.export_file = base64.encodebytes(fn.read())
     """
     @api.multi
     def download_hr_expense_attachments(self):
@@ -72,10 +67,7 @@ class hr_expense_attachments_download(models.Model):
         zip_file_object.close()
         fn = open(temp_zip, 'rb')
         self.export_file = base64.encodebytes(fn.read())
-        # python 2.7 allow this other function but the one above is prefered
-        # self.export_file = base64.encodestring(fn.read())
         fn.close()
-
         return {
             'type': 'ir.actions.act_url',
             'url': '/web/binary/download_document?' + urlencode({
