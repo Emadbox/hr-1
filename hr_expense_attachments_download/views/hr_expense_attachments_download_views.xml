@@ -6,9 +6,10 @@
       <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form" />
       <field name="arch" type="xml">
           <xpath expr="//button[@name='approve_expense_sheets']" position="before">
-            <button name="download_hr_expense_attachments" states="done" string="Download All Attachments" type="object"/>
+            <button name="download_hr_expense_attachments" states="draft,reported,done,refused" string="Download All Attachments" type="object"/>
           </xpath>
       </field>
     </record>
+    <menuitem id="hr_expense_attachments_download" name="Hr Expense Attachment Download" sequence="100" web_icon="hr_expense_attachments_download,static/description/icon.png"/>
   </data>
 </odoo>

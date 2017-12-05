@@ -22,6 +22,6 @@
         'hr_expense'
     ],
     'data': [
-        'views/views.xml',
+        'views/hr_expense_attachments_download_views.xml',
     ],
 }

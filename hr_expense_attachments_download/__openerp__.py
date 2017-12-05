@@ -15,6 +15,6 @@ a single zip archive.
 This module has been developed by AbAKUS it-solutions
 """,
     'data': [
-        'views/views.xml',
+        'views/hr_expense_attachments_download_views.xml',
     ],
 }

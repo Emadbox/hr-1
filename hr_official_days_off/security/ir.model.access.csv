@@ -1,7 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_hr_holidays_manager,hr.holidays.year,model_hr_holidays_year,hr.group_hr_manager,1,1,1,1
-access_hr_holidays_period_category,hr.holidays.period.category,model_hr_holidays_period_category,hr.group_hr_manager,1,1,1,1
-access_hr_holidays_period,hr.holidays.period,model_hr_holidays_period,hr.group_hr_manager,1,1,1,1
-access_hr_holidays_year_wizard,hr.holidays.year.wizard,model_hr_holidays_year_wizard,hr.group_hr_manager,1,1,1,1
-access_hr_holidays_user_year,hr.holidays.year,model_hr_holidays_year,base.group_user,1,0,0,0
-access_hr_holidays_user,hr.holidays.period,model_hr_holidays_period,base.group_user,1,0,0,0

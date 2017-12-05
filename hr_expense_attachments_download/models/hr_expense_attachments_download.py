@@ -18,8 +18,8 @@ class hr_expense_attachments_download(models.Model):
         help="This field holds the attachments export file.",
         readonly=True)
 
-    @api.model
-    def get_valid_filename(self, string):
+    @staticmethod
+    def get_valid_filename(string):
         remove_illegals_map = dict((ord(char), None) for char in '\/*?:"<>|')
         return string.translate(remove_illegals_map)
 
