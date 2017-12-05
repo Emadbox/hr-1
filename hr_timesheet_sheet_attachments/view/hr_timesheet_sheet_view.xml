@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_hr_timesheet_sheet_sheet_attachments">
+			<field name="name">hr_timesheet_sheet.sheet.attachments</field>
+			<field name="model">hr_timesheet_sheet.sheet</field>
+			<field name="inherit_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_form"/>
+			<field name="arch" type="xml">
+				<page position="after">
+					<page string="Attachments">
+						<field name="attachments_ids" widget="many2many_binary" string="Attach a file"/>
+					</page>
+				</page>
+			</field>
+		</record>
+	</data>
+</openerp>
+

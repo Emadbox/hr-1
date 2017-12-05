@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report 
+			id="hr_timesheet_print_report"
+			string="Timesheet Print"
+			model="hr_timesheet_sheet.sheet" 
+			report_type="qweb-pdf"
+			file="hr_timesheet_report.print"
+			name="hr_timesheet_report.timesheet_report"
+		/>
+
+        <template id="timesheet_report">
+            <t t-name="hr_timesheet_report.timesheet_report">
+                <t t-call="report.html_container">
+                    <t t-foreach="docs" t-as="o">
+                        <t t-call="report.external_layout">
+                            <div class="page">
+                                <h1 styme="text-align: center;">Timesheet Report</h1>
+                                <h3>Company: <span t-field="o.company_id" /></h3>
+                                <h4>Employee: <span t-field="o.employee_id" /></h4>
+                                <h4>Date coverage: <span t-field="o.date_from" /> to <span t-field="o.date_to" /></h4>
+                                <h4>State: <span t-field="o.state" /></h4>
+
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th width="50%">Contract</th>
+                                            <th width="15%">Date</th>
+                                            <th width="20%">Description</th>
+                                            <th width="15%">Duration (Hours)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="o.timesheet_ids.sorted(key=lambda b: b.date)" t-as="line">
+                                            <td><span t-field="line.account_id" /></td>
+                                            <td><span t-field="line.date" /></td>
+                                            <td><span t-field="line.name" /></td>
+                                            <td><span t-field="line.unit_amount" /></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Total</th>
+                                            <th><span t-esc="len(o.timesheet_ids)" /> days</th>
+                                            <th></th>
+                                            <th><span t-field="o.total_timesheet" /></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                                <table class="table table-condensed">
+                                    <tr>
+                                        <th>Submission date</th>
+                                        <th></th>
+                                        <th>Employee signature</th>
+                                        <th></th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

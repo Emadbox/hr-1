@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!-- FULL SALE ORDER REPORT -->
+        <report
+			id="hr_employee_bonuses_report"
+			string="Employee Bonuses Report"
+			model="hr.employee" 
+			report_type="qweb-pdf"
+			file="employee_advantages_report" 
+			name="hr_employee_bonuses.employee_bonuses_report_document"
+			/>
+
+        <template id="employee_bonuses_report_document">
+            <t t-call="report.html_container">
+                <t t-name="hr_employee_bonuses.employee_bonuses_report_document">
+                    <t t-foreach="docs" t-as="o">
+                        <t t-call="report.external_layout">
+                            <div class="page">
+                                <style type="text/css">
+                                </style>
+                                <div class="row">
+                                    <h2>Employee bonuses report</h2>
+                                    <h3>Employee: <span t-field="o.name" /></h3>
+                                </div>
+                                <table class="table table-bordered mb64">
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>Creator</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                    <tr t-foreach="o.bonus_ids" t-as="bonus">
+                                        <td><span t-field="bonus.description" /></td>
+                                        <td><span t-field="bonus.date" /></td>
+                                        <td><span t-field="bonus.type" /></td>
+                                        <td><span t-field="bonus.user_id" /></td>
+                                        <td><span t-field="bonus.amount" /></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>

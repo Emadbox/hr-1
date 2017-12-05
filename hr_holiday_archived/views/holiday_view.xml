@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>      
+        <record model="ir.ui.view" id="hr_holidays_archived_form">
+            <field name="name">hr_holidays_archived_form</field>
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='holiday_type']" position="after">
+                    <field name="active" invisible="True" />
+                    <button name="archive_holiday" type="object" string="Archive" attrs="{'invisible':[('active', '!=', True)]}" groups="base.group_hr_user"/>
+                    <button name="unarchive_holiday" type="object" string="Un-Archive" attrs="{'invisible':[('active', '!=', False)]}" groups="base.group_hr_user"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="hr_holiday_archived_search">
+            <field name="name">hr_holiday_archived_search</field>
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr_holidays.view_hr_holidays_filter" />
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='approve']" position="after">
+                    <filter domain="[('active','=',False)]" string="Archived" name="archived"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.actions.server" id="hr_holiday_archive_action">
+            <field name="name">Archive</field>
+            <field name="model_id" ref="hr_holiday_archived.model_hr_holidays"/>
+            <field name="code">
+                self.archive_holiday(cr, uid, context.get('active_ids', []), context=context)
+            </field>
+        </record>
+
+        <record model="ir.values" id="hr_holiday_run_archive_action">
+            <field name="model_id" ref="hr_holiday_archived.model_hr_holidays" />
+            <field name="name">Arvice</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('hr_holiday_archive_action'))" />
+            <field name="key">action</field>
+            <field name="model">hr.holidays</field>
+        </record>
+
+    </data>
+</openerp>
