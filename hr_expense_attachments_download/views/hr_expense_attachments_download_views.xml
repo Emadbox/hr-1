@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record id="hr_expense_form_view_download_all_attachments" model="ir.ui.view" >
+        <field name="name">hr_expense_form_view_download_all_attachments</field>
+        <field name="model">hr.expense.sheet</field>
+        <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="download_hr_expense_attachments" string="Download All Attachments" type="object"/>
+            </xpath>
+        </field>
+        </record>
+    </data>
+</odoo>
