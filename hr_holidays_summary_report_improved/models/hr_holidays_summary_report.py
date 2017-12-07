@@ -108,16 +108,24 @@ class HrHolidaysSummaryReport(osv.osv.AbstractModel):
         for holiday in holidays_obj.browse(cr, uid, holidays_ids, context=context):
             # Convert date to user timezone, otherwise the report will not be consistent with the
             # value displayed in the interface.
+	    delta = 0
             date_from_real = datetime.strptime(holiday.date_from, DEFAULT_SERVER_DATETIME_FORMAT)
             date_from_real = osv.fields.datetime.context_timestamp(cr, uid, date_from_real, context=context)
             date_from = date_from_real.date()
+            if date_from < start_date:
+                delta += (start_date - date_from).days 
             date_to_real = datetime.strptime(holiday.date_to, DEFAULT_SERVER_DATETIME_FORMAT)
             date_to_real = osv.fields.datetime.context_timestamp(cr, uid, date_to_real, context=context)
             date_to = date_to_real.date()
+            if date_to > end_date:
+                delta += (date_to - end_date).days 
             if holiday.number_of_days_temp and holiday.number_of_days_temp > 0:
                 sum_days += holiday.number_of_days_temp
                 sum_days_status.setdefault(holiday.holiday_status_id, 0)
                 sum_days_status[holiday.holiday_status_id] += holiday.number_of_days_temp
+                # remove holidays beyond current observed period
+		sum_days -= delta
+                sum_days_status[holiday.holiday_status_id] -= delta
             else:
                 raise exceptions.ValidationError(_('No duration has been set for a holiday (') + holiday.employee_id.name + _(' from ') + date_from.strftime(DEFAULT_SERVER_DATE_FORMAT) + _(' to ') + date_to.strftime(DEFAULT_SERVER_DATE_FORMAT) + ')')
                 return False
