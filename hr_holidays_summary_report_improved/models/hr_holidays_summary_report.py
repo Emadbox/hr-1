@@ -98,9 +98,18 @@ class HrHolidaysSummaryReport(osv.osv.AbstractModel):
         for index in range(0, (self.end_date - self.start_date).days + 1):
             current = start_date + timedelta(index)
             res.append({'day': current.day, 'color_morning': '', 'color_afternoon': ''})
-            if current.strftime('%a') == 'Sat' or current.strftime('%a') == 'Sun':
+
+            # Official days-off
+            employee_obj = self.pool['hr.employee']
+            employee = employee_obj.browse(cr, uid, [empid], context=context)[0]
+            days_off_obj = self.pool['hr.holidays.period']
+            current_string = datetime.strftime(current, DEFAULT_SERVER_DATE_FORMAT)
+            days_off = days_off_obj.search(cr, uid, ['&', '|', ('company_ids', '=', False), ('company_ids', '=', employee.company_id.id), '|', ('date_start', '=', current_string), ('date_stop', '=', current_string)], context=context)
+            if (len(days_off) > 0):
                 res[index]['color_morning'] = '#ababab'
                 res[index]['color_afternoon'] = '#ababab'
+                
+            
         # count and get leave summary details.
         holidays_obj = self.pool['hr.holidays']
         holiday_type = ['confirm','validate'] if holiday_type == 'both' else ['confirm'] if holiday_type == 'Confirmed' else ['validate']
