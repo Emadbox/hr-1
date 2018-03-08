@@ -5,27 +5,27 @@
             <field name="model">hr.holidays</field>
             <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
             <field name="arch" type="xml">
-                <xpath expr="//label[@for='number_of_days_temp']" position="replace">
-                    <label string="Disposition" for="number_of_days_temp" />
+                <xpath expr="//field[@name='date_from']" position="attributes">
+                    <attribute name="on_change" />
+                    <attribute name="class">oe_inline oe_read_only</attribute>
                 </xpath>
-                <xpath expr="//group/group/div" position="replace">
-                    <div attrs="{'invisible': [('type', '=', 'add')]}">
-                        <field name="date_from" class="oe_inline oe_read_only" />
-                        <label string="From : " class="oe_inline oe_edit_only" />
-                        <field name="date_day_from" labe="1" attrs="{'required': [('type', '=', 'remove')]}" class="oe_inline oe_edit_only" />
-                        <label string=" - " class="oe_inline oe_edit_only"/>
-                        <field name="day_time_from" no_label="1" attrs="{'required': [('type', '=', 'remove')]}" class="oe_inline oe_edit_only" />
-                        <br />
-                        <field name="date_to" class="oe_inline oe_read_only" />
-                        <label string="To : " class="oe_inline oe_edit_only" />
-                        <field name="date_day_to" no_label="1" attrs="{'required': [('type', '=', 'remove')]}" class="oe_inline oe_edit_only" />
-                        <label string=" - " class="oe_inline oe_edit_only"/>
-                        <field name="day_time_to" no_label="1" attrs="{'required': [('type', '=', 'remove')]}" class="oe_inline oe_edit_only" />
-                        <br />
-                        <label string="Duration (in days)" />: <field name="number_of_days_temp" attrs="{'readonly': [('type', '=', 'remove')]}" />
-                    </div>
+                <xpath expr="//field[@name='date_to']" position="attributes">
+                    <attribute name="on_change" />
+                    <attribute name="class">oe_inline oe_read_only</attribute>
                 </xpath>
-                
+
+                <xpath expr="//field[@name='number_of_days_temp']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('type', '=', 'remove')]}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='date_from']" position="after">
+                    <field name="date_day_from" no_label="1" attrs="{'required': [('type', '=', 'remove')]}" class="oe_inline oe_edit_only" />
+                    <field name="day_time_from" no_label="1" attrs="{'required': [('type', '=', 'remove')]}" class="oe_inline oe_edit_only" />
+                </xpath>
+                <xpath expr="//field[@name='date_to']" position="after">
+                    <field name="date_day_to" no_label="1" attrs="{'required': [('type', '=', 'remove')]}" class="oe_inline oe_edit_only" />
+                    <field name="day_time_to" no_label="1" attrs="{'required': [('type', '=', 'remove')]}" class="oe_inline oe_edit_only" />
+                </xpath>
             </field>
         </record>
     </data>
