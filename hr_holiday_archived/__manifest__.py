@@ -1,6 +1,6 @@
 {
     'name': "Archive Holidays",
-    'version': '9.0.1.0.1',
+    'version': '10.0.1.0.1',
     'depends': ['hr_holidays'],
     'author': "AbAKUS it-solutions SARL",
     'website': "http://www.abakusitsolutions.eu",
