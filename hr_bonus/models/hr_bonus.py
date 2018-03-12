@@ -15,6 +15,7 @@ class Bonus(models.Model):
         ('draft', 'Draft'),
         ('submitted', 'Submitted'),
         ('approved', 'Approved'),
+        ('paid', 'Paid'),
         ('refused', 'Refused')
     ], string='State', default='draft', required=True)
     date = fields.Datetime(string='Date', required=True, readonly=True, states={'draft': [('readonly', False)]})
