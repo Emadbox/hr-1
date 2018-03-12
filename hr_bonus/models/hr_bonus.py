@@ -7,6 +7,7 @@ _logger = logging.getLogger(__name__)
 
 class Bonus(models.Model):
     _name = 'hr.bonus'
+    _inherit = 'mail.thread'
     _order = 'date desc'
 
     name = fields.Char(string='Name', copy=False, index=True, required=True, readonly=True, states={'draft': [('readonly', False)]})
@@ -36,6 +37,10 @@ class Bonus(models.Model):
     @api.one
     def action_refuse(self):
         self.write({'state': 'refused'})
+
+    @api.one
+    def action_mark_as_paid(self):
+        self.write({'state': 'paid'})
 
     @api.one
     def action_unlink(self):
