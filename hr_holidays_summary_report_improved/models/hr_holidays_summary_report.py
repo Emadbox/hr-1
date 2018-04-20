@@ -30,7 +30,6 @@ class HrHolidaysSummaryReport(osv.osv.AbstractModel):
             for attendance in calendar.attendance_ids:
                 self.attendances_midday[int(attendance.dayofweek)] = (attendance.hour_to + attendance.hour_from) / 2
 
-
     def _get_header_info(self, start_date_str, holiday_type):
 
         month_names = [
@@ -72,7 +71,7 @@ class HrHolidaysSummaryReport(osv.osv.AbstractModel):
         return res
 
     def _get_months(self):
-        # it works for geting month name between two dates.
+        # it works for getting month name between two dates.
         res = []
         start_date = self.start_date
         end_date = self.end_date
@@ -105,11 +104,10 @@ class HrHolidaysSummaryReport(osv.osv.AbstractModel):
             days_off_obj = self.pool['hr.holidays.period']
             current_string = datetime.strftime(current, DEFAULT_SERVER_DATE_FORMAT)
             days_off = days_off_obj.search(cr, uid, ['&', '|', ('company_ids', '=', False), ('company_ids', '=', employee.company_id.id), '|', ('date_start', '=', current_string), ('date_stop', '=', current_string)], context=context)
-            if (len(days_off) > 0):
+            if len(days_off) > 0:
                 res[index]['color_morning'] = '#ababab'
                 res[index]['color_afternoon'] = '#ababab'
-                
-            
+
         # count and get leave summary details.
         holidays_obj = self.pool['hr.holidays']
         holiday_type = ['confirm','validate'] if holiday_type == 'both' else ['confirm'] if holiday_type == 'Confirmed' else ['validate']
@@ -117,7 +115,7 @@ class HrHolidaysSummaryReport(osv.osv.AbstractModel):
         for holiday in holidays_obj.browse(cr, uid, holidays_ids, context=context):
             # Convert date to user timezone, otherwise the report will not be consistent with the
             # value displayed in the interface.
-	    delta = 0
+            delta = 0
             date_from_real = datetime.strptime(holiday.date_from, DEFAULT_SERVER_DATETIME_FORMAT)
             date_from_real = osv.fields.datetime.context_timestamp(cr, uid, date_from_real, context=context)
             date_from = date_from_real.date()
@@ -133,13 +131,13 @@ class HrHolidaysSummaryReport(osv.osv.AbstractModel):
                 sum_days_status.setdefault(holiday.holiday_status_id, 0)
                 sum_days_status[holiday.holiday_status_id] += holiday.number_of_days_temp
                 # remove holidays beyond current observed period
-		sum_days -= delta
+                sum_days -= delta
                 sum_days_status[holiday.holiday_status_id] -= delta
             else:
                 raise exceptions.ValidationError(_('No duration has been set for a holiday (') + holiday.employee_id.name + _(' from ') + date_from.strftime(DEFAULT_SERVER_DATE_FORMAT) + _(' to ') + date_to.strftime(DEFAULT_SERVER_DATE_FORMAT) + ')')
                 return False
             for index in range(0, ((date_to - date_from).days + 1)):
-                if date_from >= start_date and date_from <= end_date:
+                if start_date <= date_from <= end_date:
                     if res[(date_from-start_date).days]['color_morning'] == '':
                         if date_from != date_from_real.date() or not self.attendances_midday[date_from.weekday()] or date_from_real.hour*60+date_from_real.minute < self.attendances_midday[date_from.weekday()]*60:
                             res[(date_from-start_date).days]['color_morning'] = holiday.holiday_status_id.color_name
