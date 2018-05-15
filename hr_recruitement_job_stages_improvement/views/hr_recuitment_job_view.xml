@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="hr_job_survey_stages_improvements">
+            <field name="name">hr_job_survey_stages_improvements</field>
+            <field name="model">hr.job</field>
+            <field name="inherit_id" ref="hr_recruitment.hr_job_survey"/>
+            <field name="arch" type="xml">
+                <xpath expr="(//field[@name='stage_ids'])" position="replace">
+                    <field name="stage_ids" widget="many2many_tags" options="{'no_create': True}" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
