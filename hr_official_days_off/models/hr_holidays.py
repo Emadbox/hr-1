@@ -41,7 +41,7 @@ class HrHolidays(models.Model):
         return True
 
     def _add_needed_fields(self, values):
-        if values.get('type') and values.get('type') == 'remove':
+        if (values.get('type') and values.get('type') == 'remove') or (not values.get('type')):
             if values.get('date_day_from') or values.get('day_time_from') or values.get('date_day_to') or values.get('day_time_to'):
 
                 date_day_from = values.get('date_day_from', self.date_day_from)
@@ -75,7 +75,6 @@ class HrHolidays(models.Model):
                     values['number_of_days_temp'] = self._compute_holidays_duration(values)
                 else:
                     values['number_of_days_temp'] = 0
-
         return values
 
     @api.model
@@ -97,12 +96,16 @@ class HrHolidays(models.Model):
             return super(HrHolidays, self).create(values)
         return False
 
-    @api.one
+    @api.multi
     def write(self, values):
         values = self._removeDatesForAllocation(values)
         values = self._add_needed_fields(values)
+
+        ctx = dict(self._context or {})
+        ctx.update({'create_company': True})
+
         if self._check_fields(values):
-            return super(HrHolidays, self).write(values)
+            return super(HrHolidays, self.with_context(ctx)).write(values)
         return False
 
     @api.model
