@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="web_event_display_assets_backend" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script src="/calendar_event_email_restrict/static/src/js/web_event_display.js" type="text/javascript"></script>
+            </xpath>
+        </template>
+
+        <!-- Added mode in event form -->
+        <record model="ir.ui.view" id="calendar_event_with_mode_form">
+			<field name="name">calendar_event_with_mode_form</field>
+			<field name="model">calendar.event</field>
+			<field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+			<field name="arch" type="xml">
+                <xpath expr="(//field[@name='categ_ids'])" position="after">
+                    <field name="mode" widget="radio"></field>
+                    <field name="email_options" widget="radio"></field>
+                </xpath>
+			</field>
+		</record>
+
+        <record model="ir.ui.view" id="calendar_event_with_mode_form_popup">
+			<field name="name">calendar_event_with_mode_form_popup</field>
+			<field name="model">calendar.event</field>
+			<field name="inherit_id" ref="calendar.view_calendar_event_form_popup"/>
+			<field name="arch" type="xml">
+                <xpath expr="(//field[@name='categ_ids'])" position="after">
+                    <field name="mode" widget="radio"></field>
+                    <field name="email_options" widget="radio"></field>
+                </xpath>
+			</field>
+		</record>
+
+        <record model="ir.ui.view" id="view_calendar_event_calendar_display">
+            <field name="name">calendar.event.calendar.display</field>
+            <field name="model">calendar.event</field>
+            <field name="inherit_id" ref="calendar.view_calendar_event_calendar"/>
+            <field name="arch" type="xml">
+                <xpath expr="(//calendar)" position="inside">
+                    <field name="mode_text"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- <record model="ir.ui.view" id="view_calendar_event_calendar_show_fixed">
+            <field name="name">view_calendar_event_calendar_show_fixed</field>
+            <field name="model">calendar.event</field>
+            <field name="inherit_id" ref="calendar.view_calendar_event_calendar"/>
+            <field name="priority" eval="15"/>
+            <field name="arch" type="xml">
+                <xpath expr="(//calendar)" position="replace">
+                    <calendar string="Meetings" date_start="start" date_stop="stop" date_delay="duration" all_day="allday" 
+                                 display="Coucou&lt;br&gt;[name]" color="color_partner_id" attendee="partner_ids" avatar_model="res.partner"
+                                 use_contacts="True" event_open_popup="%(calendar.view_calendar_event_form_popup)s">
+                        <field name="name"/>
+                        <field name="user_id"/>
+                        <field name="color_partner_id"/>
+                        <field name="partner_ids"/>
+                    </calendar>
+                </xpath>
+            </field>
+        </record> -->
+    </data>
+</odoo>

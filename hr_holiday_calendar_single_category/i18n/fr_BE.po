@@ -1,0 +1,83 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* calendar_event_email_restrict
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0e-20170621\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-28 12:59+0000\n"
+"PO-Revision-Date: 2017-07-28 12:59+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: calendar_event_email_restrict
+#: code:addons/calendar_event_email_restrict/models/calendar_event.py:28
+#, python-format
+msgid "Afternoon"
+msgstr "Après-Midi"
+
+#. module: calendar_event_email_restrict
+#: model:ir.model,name:calendar_event_email_restrict.model_calendar_attendee
+msgid "Attendee information"
+msgstr "Informations du participant"
+
+#. module: calendar_event_email_restrict
+#: selection:calendar.event,email_options:0
+msgid "Don't Send Email"
+msgstr "Ne pas envoyer d'e-mail"
+
+#. module: calendar_event_email_restrict
+#: model:ir.model.fields,field_description:calendar_event_email_restrict.field_calendar_event_email_options
+msgid "Email Options (for non-users)"
+msgstr "Email Options (for non-users)"
+
+#. module: calendar_event_email_restrict
+#: code:addons/calendar_event_email_restrict/models/calendar_event.py:35
+#: selection:calendar.event,mode:0
+#, python-format
+msgid "Fixed timing"
+msgstr "Heure précise"
+
+#. module: calendar_event_email_restrict
+#: model:ir.model,name:calendar_event_email_restrict.model_calendar_event
+msgid "Meeting"
+msgstr "Meeting"
+
+#. module: calendar_event_email_restrict
+#: model:ir.model.fields,field_description:calendar_event_email_restrict.field_calendar_event_mode
+msgid "Mode"
+msgstr "Mode"
+
+#. module: calendar_event_email_restrict
+#: model:ir.model.fields,field_description:calendar_event_email_restrict.field_calendar_event_mode_text
+msgid "Mode Text"
+msgstr "Mode Text"
+
+#. module: calendar_event_email_restrict
+#: code:addons/calendar_event_email_restrict/models/calendar_event.py:28
+#, python-format
+msgid "Morning"
+msgstr "Matinée"
+
+#. module: calendar_event_email_restrict
+#: selection:calendar.event,email_options:0
+msgid "Send Email"
+msgstr "Envoyer un e-mail"
+
+#. module: calendar_event_email_restrict
+#: selection:calendar.event,email_options:0
+msgid "Send Email with AM/PM"
+msgstr "Send Email with AM/PM"
+
+#. module: calendar_event_email_restrict
+#: code:addons/calendar_event_email_restrict/models/calendar_event.py:35
+#: selection:calendar.event,mode:0
+#, python-format
+msgid "Variable timing"
+msgstr "Heure imprécise"
+
