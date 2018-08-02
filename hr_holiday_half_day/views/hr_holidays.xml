@@ -14,10 +14,6 @@
                     <attribute name="class">oe_inline oe_read_only</attribute>
                 </xpath>
 
-                <xpath expr="//field[@name='number_of_days_temp']" position="attributes">
-                    <attribute name="attrs">{'readonly': [('type', '=', 'remove')]}</attribute>
-                </xpath>
-
                 <xpath expr="//field[@name='date_from']" position="after">
                     <field name="date_day_from" no_label="1" attrs="{'required': [('type', '=', 'remove')]}" class="oe_inline oe_edit_only" />
                     <field name="day_time_from" no_label="1" attrs="{'required': [('type', '=', 'remove')]}" class="oe_inline oe_edit_only" />

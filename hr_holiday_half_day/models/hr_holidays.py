@@ -91,15 +91,17 @@ class HrHolidays(models.Model):
     @api.model
     def create(self, values):
         values = self._removeDatesForAllocation(values)
-        values = self._add_needed_fields(values)
+        #values = self._add_needed_fields(values)
         if self._check_fields(values):
+            _logger.debug("Values : %s", values)
             return super(HrHolidays, self).create(values)
 
     @api.one
     def write(self, values):
         values = self._removeDatesForAllocation(values)
-        values = self._add_needed_fields(values)
+        #values = self._add_needed_fields(values)
         if self._check_fields(values):
+            _logger.debug("Values : %s", values)
             return super(HrHolidays, self).write(values)
 
     @api.model
@@ -140,15 +142,13 @@ class HrHolidays(models.Model):
 
         return worktime
 
-    @api.multi
     @api.onchange('date_day_from', 'day_time_from', 'date_day_to', 'day_time_to')
     def _onchange_dates(self):
-        for leave in self:
-            if leave.date_day_from and leave.date_day_to:
-                worktime = leave.get_worktime(leave.date_day_from)
-                time_from = worktime['afternoon_start'] if leave.day_time_from == 'midday' else worktime['morning_start']
-                time_to = worktime['afternoon_start'] if leave.day_time_to == 'midday' else worktime['afternoon_end']
+        if self.date_day_from and self.date_day_to:
+            worktime = self.get_worktime(self.date_day_from)
+            time_from = worktime['afternoon_start'] if self.day_time_from == 'midday' else worktime['morning_start']
+            time_to = worktime['morning_end'] if self.day_time_to == 'midday' else worktime['afternoon_end']
 
-                leave.date_from = self.to_datetime(leave.date_day_from + ' ' + self.float_time_convert(time_from) + ':00', self._context.get('tz'))
-                leave.date_to = self.to_datetime(leave.date_day_to + ' ' + self.float_time_convert(time_to) + ':00', self._context.get('tz'))
-                leave.number_of_days_temp = self._get_number_of_days(leave.date_from, leave.date_to, self.employee_id.id)
+            self.date_from = self.to_datetime(self.date_day_from + ' ' + self.float_time_convert(time_from) + ':00', self._context.get('tz'))
+            self.date_to = self.to_datetime(self.date_day_to + ' ' + self.float_time_convert(time_to) + ':00', self._context.get('tz'))
+            self.number_of_days_temp = self._get_number_of_days(self.date_from, self.date_to, self.employee_id.id)
