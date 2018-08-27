@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
+# (c) AbAKUS IT Solutions
 {
     'name': "Hr Expense Attachment Download",
-    'version': '10.0.1.0',
+    'version': '10.0.1.0.1',
+    'license': 'AGPL-3',
     'depends': [
         'base',
         'hr_expense'
@@ -8,12 +11,7 @@
     'author': "AbAKUS it-solutions SARL",
     'website': "http://www.abakusitsolutions.eu",
     'category': 'HR',
-    'description':
-"""
-This module adds an action button to an Expense Report view allowing to export all attachments referenced into
-a single zip archive.
-This module has been developed by AbAKUS it-solutions
-""",
+    'summay': "Hr Expense Attachment Download",
     'data': [
         'views/hr_expense_attachments_download_views.xml',
     ],

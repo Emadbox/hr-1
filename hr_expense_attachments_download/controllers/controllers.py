@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+# (c) AbAKUS IT Solutions
+import base64
+import werkzeug
 from odoo import http
 from odoo.http import request
 from odoo.addons.web.controllers.main import serialize_exception
-import base64
-import werkzeug
 
 
 class HrExpenseWattach(http.Controller):
@@ -13,15 +14,15 @@ class HrExpenseWattach(http.Controller):
         """
         Download link for binary files
         """
-        Model = request.env[model].sudo().search([('id', '=', int(id))])
-        filecontent = base64.b64decode(Model[field] or '')
+        the_model = request.env[model].sudo().search([('id', '=', int(id))])
+        file_content = base64.b64decode(the_model[field] or '')
         headers = werkzeug.datastructures.Headers()
 
-        if not filecontent:
+        if not file_content:
             return request.not_found()
         else:
             if not filename:
                 filename = '%s_%s' % (model.replace('.', '_'), id)
 
             headers.add('Content-Disposition', 'attachment', filename=filename)
-            return request.make_response(filecontent, headers)
+            return request.make_response(file_content, headers)

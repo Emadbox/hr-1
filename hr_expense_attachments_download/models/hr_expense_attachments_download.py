@@ -1,18 +1,14 @@
 # -*- coding: utf-8 -*-
-from odoo import (
-    models,
-    fields,
-    api,
-    _
-)
-from zipfile import ZipFile
+# (c) AbAKUS IT Solutions
 import urllib
 import base64
 import tempfile
+from zipfile import ZipFile
 from string import maketrans
+from odoo import models, fields, api, _
 
 
-class hr_expense_attachments_download(models.Model):
+class HrExpenseAttachmentsDownload(models.Model):
     _inherit = 'hr.expense.sheet'
     export_file = fields.Binary(
         attachment=True,
@@ -26,7 +22,7 @@ class hr_expense_attachments_download(models.Model):
             translate_table = dict((ord(char), '_') for char in not_letters_or_digits)
         else:
             assert isinstance(filename, str)
-            translate_table = maketrans(not_letters_or_digits, '_'*len(not_letters_or_digits))
+            translate_table = maketrans(not_letters_or_digits, '_' * len(not_letters_or_digits))
         return filename.translate(translate_table)
 
     """
@@ -53,16 +49,17 @@ class hr_expense_attachments_download(models.Model):
                 [('res_model', '=', 'hr.expense'), ('res_id', '=', line.id)]
             )
             for f in attachment_data:
-                fn = open(temp_file,  'wb')
+                fn = open(temp_file, 'wb')
                 fn.write(base64.b64decode(f.datas))
                 fn.close()
-                zip_file_object.write(temp_file, folder_name+"/"+f.datas_fname)
+                zip_file_object.write(temp_file, folder_name + "/" + f.datas_fname)
 
     """
     button action 
     python 2.7 allows self.export_file = base64.encodestrings(fn.read()) to be called.
     python 3.x prefers self.export_file = base64.encodebytes(fn.read())
     """
+
     @api.multi
     def download_hr_expense_attachments(self):
         self.ensure_one()
@@ -76,7 +73,7 @@ class hr_expense_attachments_download(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'url': '/web/binary/download_document?' + urllib.urlencode({
-                'model': 'hr.expense.sheet',
+                'models': 'hr.expense.sheet',
                 'field': 'export_file',
                 'id': self.id,
                 'filename': self.get_valid_filename(self.name) + _(" (Attachments).zip")
