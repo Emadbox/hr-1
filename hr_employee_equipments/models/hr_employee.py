@@ -1,9 +1,9 @@
-from openerp import models, fields, api
-import datetime
-from datetime import date
+# -*- coding: utf-8 -*-
+# (c) AbAKUS IT Solutions
+from odoo import models, fields, api
 
 
-class hr_employee_equiped(models.Model):
+class HrEmployeeEquiped(models.Model):
     _inherit = 'hr.employee'
 
     equipment_ids = fields.One2many('hr.equipment', 'employee_id', 'Equipments')

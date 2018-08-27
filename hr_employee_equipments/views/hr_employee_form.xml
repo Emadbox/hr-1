@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <record model="ir.actions.act_window" id="employee_equipments" >
-            <field name="name">Equipments for employee</field>
-            <field name="res_model">hr.equipment</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form, kanban</field>
-            <field name="view_id" ref="hr_equipment.hr_equipment_view_kanban" />
-            <field name="domain"></field>
-        </record>
+<odoo>
+    <record model="ir.actions.act_window" id="employee_equipments">
+        <field name="name">Equipments for employee</field>
+        <field name="res_model">hr.equipment</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form, kanban</field>
+        <field name="view_id" ref="hr_equipment.hr_equipment_view_kanban"/>
+        <field name="domain"></field>
+    </record>
 
-        <record id="hr_employee_view_with_equipments" model="ir.ui.view">
-            <field name="name">hr_employee_view_with_equipments</field>
-            <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="(//div[@name='button_box'])" position="inside">
-                    <button type="action" name="%(employee_equipments)d" class="oe_stat_button" icon="fa-laptop" context="{'search_default_employee_id': active_id, 'default_employee_id': active_id}">
-                        <field string="Equipments" name="equipment_count" widget="statinfo"/>
-                    </button>
-                </xpath>
-            </field>
-        </record>
-    </data>
-</openerp>
-                
+    <record id="hr_employee_view_with_equipments" model="ir.ui.view">
+        <field name="name">hr_employee_view_with_equipments</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="(//div[@name='button_box'])" position="inside">
+                <button type="action" name="%(employee_equipments)d" class="oe_stat_button" icon="fa-laptop"
+                        context="{'search_default_employee_id': active_id, 'default_employee_id': active_id}">
+                    <field string="Equipments" name="equipment_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
