@@ -1,24 +1,29 @@
 # -*- coding: utf-8 -*-
-
-from openerp import models, fields, api, exceptions, _
-
+# (c) AbAKUS IT Solutions
 import logging
+from odoo import models, fields, api, exceptions, _
+
 _logger = logging.getLogger(__name__)
+
 
 class Bonus(models.Model):
     _name = 'hr.bonus'
     _order = 'date desc'
 
-    name = fields.Char(string='Name', copy=False, index=True, required=True, readonly=True, states={'draft': [('readonly', False)]})
-    description = fields.Text(string='Description', readonly=True, states={'draft': [('readonly', False)]})
+    name = fields.Char(copy=False, index=True, required=True, readonly=True,
+                       states={'draft': [('readonly', False)]})
+    description = fields.Text(readonly=True, states={'draft': [('readonly', False)]})
     state = fields.Selection([
         ('draft', 'Draft'),
         ('submitted', 'Submitted'),
         ('approved', 'Approved'),
         ('refused', 'Refused')
-    ], string='State', default='draft', required=True)
-    date = fields.Datetime(string='Date', required=True, readonly=True, states={'draft': [('readonly', False)]})
-    employee_id = fields.Many2one('hr.employee', string='Employee', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env['hr.employee'].search([('user_id', '=', self.env.user.id)]))
+    ], default='draft', required=True)
+    date = fields.Datetime(required=True, readonly=True, states={'draft': [('readonly', False)]})
+    employee_id = fields.Many2one('hr.employee', string='Employee', required=True, readonly=True,
+                                  states={'draft': [('readonly', False)]},
+                                  default=lambda self: self.env['hr.employee'].search(
+                                      [('user_id', '=', self.env.user.id)]))
 
     @api.one
     def action_draft(self):
