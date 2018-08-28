@@ -1,9 +1,12 @@
+# -*- coding: utf-8 -*-
+# (c) AbAKUS IT Solutions
 from odoo import api, models, fields
 
-class hr_holiday_archived(models.Model):
+
+class HrHolidayArchived(models.Model):
     _inherit = 'hr.holidays'
-    
-    active = fields.Boolean('Active', default=True)
+
+    active = fields.Boolean(default=True)
 
     @api.model
     def _archive_holiday(self):
