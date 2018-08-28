@@ -15,7 +15,7 @@ addon | version | summary
 [hr_expense_attachments_download](hr_expense_attachments_download/) | 10.0.1.0.2 | Hr Expense Attachment Download
 [hr_expense_validate_post](hr_expense_validate_post/) | 10.0.1.0.0 | Expense Validate then Post
 [hr_holiday_archived](hr_holiday_archived/) | 10.0.1.0.2 | Archive Holidays
-[](/) | 10.0.1.0.0 | 
+[hr_improvements](hr_improvements/) | 10.0.1.0.0 | HR Abakus Improvement
 [](/) | 10.0.1.0.0 | 
 [](/) | 10.0.1.0.0 | 
 
