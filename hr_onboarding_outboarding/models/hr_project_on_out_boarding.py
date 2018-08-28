@@ -1,13 +1,15 @@
-from openerp import models, fields, api
-
+# -*- coding: utf-8 -*-
+# (c) AbAKUS IT Solutions
 import logging
+from odoo import models, fields, api
+
 _logger = logging.getLogger(__name__)
 
 
-class hr_project_on_out_boarding(models.Model):
+class HrProjectOnOutBoarding(models.Model):
     _name = 'hr.project.on.out.boarding'
     _description = 'Project On/Out Boarding Templates'
 
-    name = fields.Char('Name', required=True)
-    type = fields.Selection([('onboarding', 'Onboarding'), ('outboarding', 'Outboarding')], 'Type')
+    name = fields.Char(required=True)
+    type = fields.Selection([('onboarding', 'Onboarding'), ('outboarding', 'Outboarding')])
     project_id = fields.Many2one('project.project', 'Project template')
