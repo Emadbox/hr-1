@@ -15,7 +15,7 @@
         'views/menu_buttons.xml',
         'views/bonus.xml',
         'views/employee.xml',
-        'security/ir.model.access.csv',
+        'security/ir.models.access.csv',
     ],
     'application': True
 }
