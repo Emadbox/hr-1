@@ -4,7 +4,7 @@ import time
 from odoo import models, fields, api, exceptions, _
 
 
-class HrHolidaysSummaryDept(models.Model):
+class HrHolidaysSummaryDept(models.TransientModel):
     _inherit = 'hr.holidays.summary.dept'
 
     month = fields.Selection([
