@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
-
-from openerp import models, fields, api, exceptions, _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-
-import time
+# (c) AbAKUS IT Solutions
+import logging
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from dateutil import rrule
+from odoo import models, fields, api, exceptions, _
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
-import logging
 _logger = logging.getLogger(__name__)
+
 
 class HrHolidaysYearWizard(models.Model):
     _name = 'hr.holidays.year.wizard'
-    
+
     year_id = fields.Many2one('hr.holidays.year', string="Year", required=True)
 
     @api.model
@@ -37,8 +36,8 @@ class HrHolidaysYearWizard(models.Model):
         category = category_ids[0] if category_ids else category_obj.create({'name': 'Week-End'})
 
         try:
-            year_start = datetime.strptime('%04s-01-01' % (self.year_id.year), DEFAULT_SERVER_DATE_FORMAT)
-            year_end = datetime.strptime('%04s-12-31' % (self.year_id.year), DEFAULT_SERVER_DATE_FORMAT)
+            year_start = datetime.strptime('%04s-01-01' % self.year_id.year, DEFAULT_SERVER_DATE_FORMAT)
+            year_end = datetime.strptime('%04s-12-31' % self.year_id.year, DEFAULT_SERVER_DATE_FORMAT)
         except:
             raise exceptions.ValidationError(_('The selected year name is not a valid year name.'))
 
@@ -51,10 +50,10 @@ class HrHolidaysYearWizard(models.Model):
             iso_year, iso_weeknum, iso_weekday = saturday.isocalendar()
             weeknum = iso_year == int(self.year_id.year) and iso_weeknum or 0
             periods.append(self.env['hr.holidays.period'].create({
-                'year_id' : self.year_id.id,
-                'date_start' : saturday.strftime(DEFAULT_SERVER_DATE_FORMAT),
-                'date_stop' : (saturday+relativedelta(days=1)).strftime(DEFAULT_SERVER_DATE_FORMAT),
-                'name' : _('Week-End %02d') % (weeknum,),
+                'year_id': self.year_id.id,
+                'date_start': saturday.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                'date_stop': (saturday + relativedelta(days=1)).strftime(DEFAULT_SERVER_DATE_FORMAT),
+                'name': _('Week-End %02d') % (weeknum,),
                 'category_id': category.id,
             }))
 

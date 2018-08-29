@@ -1,25 +1,23 @@
 # -*- coding: utf-8 -*-
-
-from openerp import models, fields, api, exceptions, _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-
+# (c) AbAKUS IT Solutions
 import time
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from dateutil import rrule
-
 import logging
+from odoo import models, fields, api, exceptions, _
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+
 _logger = logging.getLogger(__name__)
+
 
 class HrHolidaysPeriod(models.Model):
     _name = 'hr.holidays.period'
-    
-    name = fields.Char('Name', required=True)
+
+    name = fields.Char(required=True)
     year_id = fields.Many2one('hr.holidays.year', string="Year", required=True, ondelete='cascade')
     date_start = fields.Date('Start Date', required=True, default=lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT))
     date_stop = fields.Date('Stop Date', required=True, default=lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT))
     category_id = fields.Many2one('hr.holidays.period.category', string="Category")
-    company_ids = fields.Many2many('res.company', string="Specific Companies", help="Apply this period only for specific companies (otherwise it is a common period)")
+    company_ids = fields.Many2many('res.company', string="Specific Companies",
+                                   help="Apply this period only for specific companies (otherwise it is a common period)")
     active = fields.Boolean(default=True)
 
     @api.model
