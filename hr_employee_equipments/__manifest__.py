@@ -7,7 +7,7 @@
     'license': 'AGPL-3',
     'depends': [
         'hr',
-        'hr_equipment',
+        'hr_maintenance',
     ],
     'website': "http://www.abakusitsolutions.eu",
     'category': 'Human Resources',
