@@ -1,10 +1,12 @@
-from openerp import models, fields, api
-
+# -*- coding: utf-8 -*-
+# (c) AbAKUS IT Solutions
 import logging
+from odoo import models, fields, api
+
 _logger = logging.getLogger(__name__)
 
 
-class project_onboarding(models.Model):
+class ProjectOnboarding(models.Model):
     _inherit = 'project.project'
 
     onboarding_project = fields.Boolean('Is an Onboarding Project', default=False)

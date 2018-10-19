@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record forcecreate="True" id="ir_cron_timesheet_reminder" model="ir.cron">
+        <field name="name">Timesheet reminder</field>
+        <field name="active" eval="True"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model" eval="'hr_timesheet_sheet.sheet'"/>
+        <field name="function" eval="'_cron_timesheet_reminder'"/>
+        <field name="args" eval="'()'"/>
+        <field name="nextcall" eval="(DateTime.now() + relativedelta(months=1)).strftime('%Y-%m-04 07:00:00')"/>
+    </record>
+</odoo>
