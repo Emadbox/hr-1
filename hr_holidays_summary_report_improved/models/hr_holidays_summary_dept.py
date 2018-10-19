@@ -31,7 +31,7 @@ class HrHolidaysSummaryDept(models.TransientModel):
     hide_empty_status = fields.Boolean(string="Hide Empty Leave Types", default=True)
     hide_no_leaves_emp = fields.Boolean(string="Hide Employees Without Leaves", default=True)
 
-    depts = fields.Many2many(default=lambda self: self.env['hr.department'].search([]))
+    depts = fields.Many2many('hr.department', 'summary_dept_rel', 'sum_id', 'dept_id', string='Department(s)')
 
     @api.one
     @api.onchange('month', 'year')
