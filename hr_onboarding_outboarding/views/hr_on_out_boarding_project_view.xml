@@ -45,6 +45,6 @@
             parent="hr.menu_human_resources_configuration"
             sequence="50"
             action="act_on_out_boarding_project_templates"
-            groups="base.group_hr_manager"
+            groups="hr.group_hr_manager"
     />
 </odoo>
