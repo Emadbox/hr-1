@@ -35,7 +35,7 @@ class HrHolidays(models.Model):
 
     def _check_fields(self, values):
         # Do these computation when 'removing' holidays
-        if values.get('type', self.type) == 'remove':
+        if values.get('type', self.type) == 'remove' and (values.get('date_from', self.date_from) != False and values.get('date_to', self.date_from) != False):
             date_from = values.get('date_from', self.date_from)
             date_to = values.get('date_to', self.date_to)
 
@@ -93,7 +93,7 @@ class HrHolidays(models.Model):
         values = self._removeDatesForAllocation(values)
         #values = self._add_needed_fields(values)
         if self._check_fields(values):
-            _logger.debug("Values : %s", values)
+            _logger.debug("Create values: %s", values)
             return super(HrHolidays, self).create(values)
 
     @api.one
@@ -101,7 +101,7 @@ class HrHolidays(models.Model):
         values = self._removeDatesForAllocation(values)
         #values = self._add_needed_fields(values)
         if self._check_fields(values):
-            _logger.debug("Values : %s", values)
+            _logger.debug("Write values : %s", values)
             return super(HrHolidays, self).write(values)
 
     @api.model
