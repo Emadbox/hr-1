@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-        <menuitem id="holidays_mi" name="Days off" parent="hr.menu_human_resources_configuration" sequence='15'/>
+        <menuitem id="holidays_mi" name="Days off" parent="hr_holidays.menu_hr_holidays_root" sequence='15'/>
         <menuitem id="holidays_period_category_all_mi" action="holidays_period_category_all_act" parent="holidays_mi" />
         <menuitem id="holidays_period_all_mi" action="holidays_period_all_act" parent="holidays_mi" />
         <menuitem id="holidays_period_user_mi" action="holidays_period_all_act" parent="hr.menu_human_resources_configuration" />
