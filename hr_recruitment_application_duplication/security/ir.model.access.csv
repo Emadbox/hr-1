@@ -1,3 +1,3 @@
 id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
-applicant_user,applicant,model_hr_duplicate_suspect,,1,1,1,1
-applicant_user,applicant,model_hr_duplicate_check_wizard,,1,0,0,0
+hr_user_duplicates,hr_user_duplicates,model_hr_duplicate_suspect,base.group_hr_user,1,1,1,1
+hr_user_wizard,hr_user_wizard,model_hr_duplicate_check_wizard,base.group_hr_user,1,0,0,0
