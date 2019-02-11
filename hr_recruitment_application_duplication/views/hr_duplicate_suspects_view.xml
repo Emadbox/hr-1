@@ -1,0 +1,64 @@
+<openerp>
+    <data>
+        <record model="ir.actions.act_window" id="list_duplicate_suspects_action">
+            <field name="name">Duplicate Suspects</field>
+            <field name="res_model">hr_duplicate_suspect</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_list_application" parent="hr_recruitment.menu_crm_case_categ0_act_job"
+                  name="Applications" sequence="0" action="hr_recruitment.crm_case_categ0_act_job" />
+
+        <menuitem id="menu_list_duplicate_suspects" parent="hr_recruitment.menu_crm_case_categ0_act_job"
+                  name="Suspected Duplicates" sequence="1"
+                  action="list_duplicate_suspects_action"/>
+
+        <record model="ir.ui.view" id="list_duplicate_suspects_tree_view">
+            <field name="name">view.name</field>
+            <field name="model">hr_duplicate_suspect</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="origin_partner_name" string="Origin Applicant's Name"/>
+                    <field name="origin_job_id" string="Origin Applied Job"/>
+                    <field name="origin_create_date" string="Origin Creation Date"/>
+                    <field name="origin_stage_id" string="Origin Stage"/>
+
+                    <field name="duplicate_partner_name" string="Duplicate Applicant's Name"/>
+                    <field name="duplicate_job_id" string="Duplicate Applied Job"/>
+                    <field name="duplicate_create_date" string="Duplicate Creation Date"/>
+                    <field name="duplicate_stage_id" string="Duplicate Stage"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="duplicate_suspect_form_view">
+            <field name="name">view.name</field>
+            <field name="model">hr_duplicate_suspect</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <h1>Duplicate Suspect</h1>
+                        <group>
+                            <group>
+                                <h2>Origin</h2>
+                                <br/>
+                                <field name="origin_partner_name" string="Applicant's Name"/>
+                                <field name="origin_job_id" string="Applied Job"/>
+                                <field name="origin_create_date" string="Creation Date"/>
+                                <field name="origin_stage_id" string="Stage"/>
+                            </group>
+                            <group>
+                                <h2>Duplicate</h2>
+                                <br/>
+                                <field name="duplicate_partner_name" string="Applicant's Name"/>
+                                <field name="duplicate_job_id" string="Applied Job"/>
+                                <field name="duplicate_create_date" string="Creation Date"/>
+                                <field name="duplicate_stage_id" string="Stage"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

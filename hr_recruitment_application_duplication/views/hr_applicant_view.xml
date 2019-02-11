@@ -1,0 +1,43 @@
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="hr_applicant_list_of_suspect_duplicates">
+            <field name="name">hr_applicant.list_of_suspect_duplicates</field>
+            <field name="model">hr.applicant</field>
+            <field name="inherit_id" ref="hr_recruitment.crm_case_form_view_job"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='description']" position="after">
+                    <notebook>
+                        <page string="Duplicates">
+                            <field name="suspect_ids">
+                                <tree>
+                                    <field name="duplicate_partner_name"/>
+                                    <field name="duplicate_job_id"/>
+                                    <field name="duplicate_create_date"/>
+                                    <field name="duplicate_stage_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="act_check_duplicates">
+            <field name="name">Check duplicates</field>
+            <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+            <field name="state">code</field>
+            <field name="condition">True</field>
+            <field name="code">action = env['hr.applicant'].browse(context['active_ids'])._action_check_duplicates()
+            </field>
+        </record>
+
+        <record model="ir.values" id="hr_applicant_run_check_duplicate_action">
+            <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+            <field name="name">Run Check duplicates</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('act_check_duplicates'))"/>
+            <field name="key">action</field>
+            <field name="model">hr.applicant</field>
+        </record>
+    </data>
+</openerp>
