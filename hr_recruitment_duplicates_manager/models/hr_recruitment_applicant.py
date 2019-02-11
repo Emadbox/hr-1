@@ -10,6 +10,12 @@ class HrRecruitmentApplicant(models.Model):
     _inherit = 'hr.applicant'
 
     suspect_ids = fields.One2many('hr_duplicate_suspect', 'origin_id', string="Suspected duplicates", ondelete='cascade')
+    suspect_ids_count = fields.Integer(string="Number of suspected applications", compute='_compute_suspect_ids_count')
+
+    @api.multi
+    def _compute_suspect_ids_count(self):
+        for applicant in self:
+            applicant.suspect_ids_count = len(applicant.suspect_ids)
 
     @api.model
     def create(self, vals):
@@ -17,6 +23,7 @@ class HrRecruitmentApplicant(models.Model):
         self._search_duplicates(res)
         return res
 
+    @api.multi
     def write(self, vals):
         result = super(HrRecruitmentApplicant, self).write(vals)
         self._search_duplicates(self)
@@ -34,9 +41,14 @@ class HrRecruitmentApplicant(models.Model):
             suspect_rec.unlink()
 
         # Search for suspected duplicates
-        corresponding_records = self.env['hr.applicant'].search([
-            '&',
-                ('id', '!=', vals.id)
+        domain = [
+            ('id', '!=', vals.id),
+            '|',
+                ('name', '=ilike', vals.name),
+                ('partner_name', '=ilike', vals.partner_name)]
+        if vals.email_from and vals.partner_mobile:
+            domain = [
+                ('id', '!=', vals.id),
                 '|',
                     '|',
                         ('name', '=ilike', vals.name),
@@ -44,7 +56,9 @@ class HrRecruitmentApplicant(models.Model):
                     '|',
                         ('email_from', '=', vals.email_from),
                         ('partner_mobile', '=', vals.partner_mobile)
-        ])
+            ]
+
+        corresponding_records = self.env['hr.applicant'].search(domain)
 
         # Create link lines for suspected duplicates
         for rec in corresponding_records:

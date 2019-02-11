@@ -38,17 +38,15 @@
                     <sheet>
                         <h1>Suspected Duplicate</h1>
                         <group>
-                            <group name="origin">
-                                <h2>Origin</h2>
-                                <br/>
+                            <group name="origin" string="Origin">
+                                <field name="origin_id" />
                                 <field name="origin_partner_name" />
                                 <field name="origin_job_id" />
                                 <field name="origin_create_date" />
                                 <field name="origin_stage_id" />
                             </group>
-                            <group name="duplicate">
-                                <h2>Duplicate</h2>
-                                <br/>
+                            <group name="duplicate" string="Duplicate">
+                                <field name="duplicate_id" />
                                 <field name="duplicate_partner_name" />
                                 <field name="duplicate_job_id" />
                                 <field name="duplicate_create_date" />

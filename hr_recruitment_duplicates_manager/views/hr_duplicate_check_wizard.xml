@@ -2,7 +2,7 @@
     <data>
         <record model="ir.ui.view" id="wizard_hr_application_check_duplicates">
             <field name="name">wizard_hr_application_check_duplicates</field>
-            <field name="model">hr_duplicate_check_wizard</field>
+            <field name="model">hr_applications_duplicate_check_wizard</field>
             <field name="arch" type="xml">
                 <form>
                     <sheet>
@@ -21,7 +21,7 @@
         <record id="launch_hr_recruitment_mass_check_duplicate_wizard" model="ir.actions.act_window">
             <field name="name">Applications Duplicate Checker</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr_duplicate_check_wizard</field>
+            <field name="res_model">hr_applications_duplicate_check_wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
