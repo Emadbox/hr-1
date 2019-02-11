@@ -7,8 +7,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='description']" position="after">
                     <notebook>
-                        <page string="Duplicates">
-                            <field name="suspect_ids">
+                        <page string="Duplicates" name="duplicates">
+                            <field name="suspect_ids" readonly="True">
                                 <tree>
                                     <field name="duplicate_partner_name"/>
                                     <field name="duplicate_job_id"/>
@@ -22,8 +22,8 @@
             </field>
         </record>
 
-        <record model="ir.actions.server" id="act_check_duplicates">
-            <field name="name">Check duplicates</field>
+        <record model="ir.actions.server" id="act_recruitment_check_duplicates">
+            <field name="name">Check Recruitment Application Duplicates</field>
             <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
             <field name="state">code</field>
             <field name="condition">True</field>
@@ -33,7 +33,7 @@
 
         <record model="ir.values" id="hr_applicant_run_check_duplicate_action">
             <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
-            <field name="name">Run Check duplicates</field>
+            <field name="name">Run Recruitment Application Duplicates Check</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.server,' + str(ref('act_check_duplicates'))"/>
             <field name="key">action</field>

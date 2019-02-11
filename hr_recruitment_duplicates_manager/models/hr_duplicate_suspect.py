@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from openerp import models, fields, api
+from openerp import models, fields, api, _
 
 import logging
 
@@ -10,7 +10,7 @@ class HrDuplicateSuspects(models.Model):
     _name = 'hr_duplicate_suspect'
 
     origin_id = fields.Many2one('hr.applicant', string="New applicant", ondelete='cascade')
-    duplicate_id = fields.Many2one('hr.applicant', string="Duplicate",ondelete='cascade', readonly=True)
+    duplicate_id = fields.Many2one('hr.applicant', string="Duplicate", ondelete='cascade', readonly=True)
 
     origin_partner_name = fields.Char(related='origin_id.partner_name')
     origin_job_id = fields.Many2one(related='origin_id.job_id')
@@ -27,5 +27,5 @@ class HrDuplicateSuspects(models.Model):
     def name_get(self):
         result = []
         for suspect in self:
-            result.append((suspect.id, "Duplicate Suspect from %s" % suspect.origin_id.name))
+            result.append((suspect.id, _("Duplicate Suspect from %s") % suspect.origin_id.name))
         return result
