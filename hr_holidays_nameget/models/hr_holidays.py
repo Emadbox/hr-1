@@ -13,5 +13,5 @@ class HrHolidays(models.Model):
     def name_get(self):
         result = []
         for holiday in self:
-            result.append((holiday.id, _("%s (%s - %s)") % (holiday.name, holiday.date_from, holiday.date_to)))
+            result.append((holiday.id, _("%s (%s -> %s)") % (holiday.name, holiday.date_from, holiday.date_to)))
         return result
